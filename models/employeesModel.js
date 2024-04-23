@@ -37,9 +37,9 @@ const employeesSchema = new mongoose.Schema({
         type: String
     },
     position:{  //Chức vụ
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "positions",
-        required: "gender is required"
+        required: "position is required"
     },
     department:{    //Phòng ban
         type: mongoose.Schema.Types.ObjectId,
