@@ -9,7 +9,9 @@ const cookieParser = require("cookie-parser");
 
 const userRoute = require("./routes/userRoute");
 const authRoute = require("./routes/authRoute");
-
+const employRoute = require("./routes/employRoute");
+const branchRoute = require("./routes/branchRoute");
+const departmentRoute = require("./routes/departmentRoute");
 
 app.use(cors({credentials: true, origin: true}));
 
@@ -29,6 +31,10 @@ app.use(morgan("common"));
 
 app.use("/user", userRoute);
 app.use("/auth", authRoute);
+app.use("/employ", employRoute);
+app.use("/branch", branchRoute);
+app.use("/department", departmentRoute);
+
 app. listen(3000,()=>{
     console.log("Server running.")
 });

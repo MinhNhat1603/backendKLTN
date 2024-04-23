@@ -10,16 +10,22 @@ const departmentSchema = mongoose.Schema({
         required: "name is required"
     },
     manager:{   //truong phong
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "users"
     },
     branch:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "branches"
+        type: String,
+        ref: "branches",
+        required: "branch is required"
     },
     description:{
         type: String
+    },
+    status:{
+        type: String,
+        required: "status is required"
     }
+
 },{timestamps: true}
 )
 

@@ -1,21 +1,21 @@
 const mongoose = require('mongoose')
 //Nhân viên
 const employeesSchema = new mongoose.Schema({
-    idEmpoyee:{
+    idEmployee:{
         type: String,
-        unique: true  
+        unique: true
     },
     name:{
         type: String,
         required: "name is required"
     },
-    birthh:{
+    birth:{
         type: String,
         required: "birth is required"
     },
     gender:{
         type: String,
-        required: "birth is required"
+        required: "gender is required"
     },
     address:{
         type: String
@@ -34,24 +34,24 @@ const employeesSchema = new mongoose.Schema({
         type: String
     },
     email:{
-        type: String,
-        unique: true
+        type: String
     },
-    position:{
+    position:{  //Chức vụ
         type: mongoose.Schema.Types.ObjectId,
-        ref: "positions"
+        ref: "positions",
+        required: "gender is required"
     },
-    department:{
+    department:{    //Phòng ban
         type: mongoose.Schema.Types.ObjectId,
         ref: "departments"
     },
-    salary:{
+    salary:{    //Lương
         type: Number
     },
     status:{
         type: String
     },
-    endDate:{
+    endDate:{   // Ngày nghỉ nếu có
         type: String
     } 
 },{timestamps: true}

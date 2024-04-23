@@ -14,10 +14,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: "role is required"
     },
-    employee:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'employees' 
-    },
     userCreate:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users'

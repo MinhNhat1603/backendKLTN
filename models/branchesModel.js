@@ -26,7 +26,13 @@ const branchSchema = mongoose.Schema({
     representative:{    //Giam doc chi nhanh
         type: mongoose.Schema.Types.ObjectId,
         ref: "users"
-    }
+    },
+    departments:[
+        {
+            type: String,
+            ref: "product"
+        }
+    ]
 },{timestamps: true}
 )
 

@@ -2,7 +2,7 @@ const userController = require("../controller/userController");
 const router =require("express").Router();
 
 //ADD A USER
-router.post ("/", userController.addUser);
+router.post ("/:id", userController.addUser);
 
 //GET ALL USER
 router.get("/", userController.getAllUser);
