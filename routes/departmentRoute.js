@@ -13,4 +13,7 @@ router.get("/:id", departmentController.getOne);
 //UPDATE Department
 router.put("/:id", departmentController.update);
 
+//So nhan vien trong phong
+router.put("/:id", departmentController.employIn);
+
 module.exports =router;

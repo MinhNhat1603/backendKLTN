@@ -2,16 +2,17 @@ const mongoose = require('mongoose')
 //Đơn Ứng tiền
 const advanceRqSchema = mongoose.Schema({
     employee:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'employees' 
+        type: String,
+        required: "employeeis required",
+        ref: "employees"
     },
     idAdvanceRq:{
         type: String,
-        required: "id is required"
+        required: "id is required",
+        unique: true
     },
     money:{
-        type: String,
-        required: "location is required"
+        type: Number
     },
     month:{
         type: Number
@@ -23,11 +24,10 @@ const advanceRqSchema = mongoose.Schema({
         type: String
     },
     status:{    
-        type: String,
-        required: "status is required"
+        type: String
     },
     approvedUser:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'users'
     }
 },{timestamps: true}

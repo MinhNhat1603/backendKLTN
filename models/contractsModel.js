@@ -2,22 +2,23 @@ const mongoose = require('mongoose')
 // Hợp đồng
 const contractSchema = new mongoose.Schema({
     employee:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'employees' 
+        type: String,
+        required: "employeeis required",
+        ref: "employees"
     },
     idContract:{
         type: String,
-        unique: true  
+        unique: "id Contract unique"  
     },
     contractType:{
         type: String,
         required: "contract type is required"
     },
-    signDate:{
+    signDate:{ //ngày kí
         type: String,
         required: "sign date is required"
     },
-    startDate:{
+    startDate:{ //Ngày hiệu lực
         type: String,
         required: "start date is required"
     },
@@ -25,28 +26,43 @@ const contractSchema = new mongoose.Schema({
         type: String,
         required: "end date is required"
     },
-    position:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'position' 
+    position:{  //Chuc vụ
+        type: String,
+        ref: 'positions' 
     },
-    department:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'department' 
+    department:{    //Phong
+        type: String,
+        ref: 'departments' 
     },
     basicSalary:{     //Lương cơ bản
-        type: Number
+        type: Number,
+        ref: 'Salary'
     },
-    allowance:{     //Phụ cấp
-        type: Number
-    },
+    allowance:[
+        {
+            name: {
+                type: String
+            },
+            money:{
+                type: Number
+            }
+        }
+    ],
     image:{   
         type: String
     },
     note:{   
         type: String
     },
+    contractAddendum:[
+        {
+            type: String,
+            ref: 'salaryDecision'
+        }
+    ],
+
     userCreate:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'users'
     }
 },{timestamps: true}

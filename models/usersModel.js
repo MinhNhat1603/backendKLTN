@@ -4,7 +4,8 @@ const userSchema = new mongoose.Schema({
     userName:{
         type: String,
         required: "user name is required",
-        unique: true
+        unique: true,
+        ref: "employees"
     },
     password:{
         type: String,
@@ -14,8 +15,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: "role is required"
     },
+    status:{
+        type: String,
+    },
     userCreate:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'users'
     }
 },{timestamps: true}

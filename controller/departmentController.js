@@ -1,5 +1,6 @@
 const department = require("../models/departmentsModel");
 const branch = require("../models/branchesModel");
+const employee = require("../models/employeesModel");
 const departmentController = {
     //ADD  Branch
     add: async (req,res) => {
@@ -18,8 +19,8 @@ const departmentController = {
     //GET ALL Branch
     getAll: async (req,res) => {
         try {
-            const branchALL = await branch.find();
-            res.status(200).json(branchALL);
+            const departmentAll = await department.find();
+            res.status(200).json(departmentAll);
         } catch (error) {
             res.status(500).json(error);
         }
@@ -27,8 +28,8 @@ const departmentController = {
      //GET A Branch
     getOne: async (req, res)=>{
         try {
-            const aBranch = await branch.findOne({ idBranch: req.params.id});
-            res.status(200).json(aBranch);
+            const aDepartment = await department.findOne({ idDepartment: req.params.id});
+            res.status(200).json(aDepartment);
         } catch (error) {
             res.status(500).json(error);
         }
@@ -37,9 +38,19 @@ const departmentController = {
     //UPDATE Branch
     update: async (req, res)=>{
         try {
-            const aBranch = await branch.findOne({ idBranch: req.params.id});
-            await aBranch.updateOne({$set: req.body});
+            const aDepartment = await department.findOne({ idDepartment: req.params.id});
+            await aDepartment.updateOne({$set: req.body});
             res.status(200).json("Update successfully!");
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    //Nhan vien trong phong
+    employIn:  async (req, res)=>{
+        try {
+            const NumberIn =await employee.countDocuments({department : req.params.id});
+            res.status(200).json(NumberIn);
         } catch (error) {
             res.status(500).json(error);
         }

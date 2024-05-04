@@ -7,13 +7,19 @@ const userController = {
             var newUser =new user();
             newUser.userName = req.params.id;
             const aEmploy =await employee.findOne({ idEmployee: req.params.id});
-            newUser.password = aEmploy.phone;
-            newUser.role = "aEmploy.position"
-            // newUser.role = aEmploy.position;
-            // newUser.userCreate =
-
-            const saveUser = await newUser.save();
-            res.status(200).json(saveUser);
+            if(aEmploy.status == "Đã đạt"){
+                newUser.password = aEmploy.phone;
+                newUser.role = aEmploy.position;
+                newUser.status = "Đang làm việc";
+                const saveUser = await newUser.save();
+                await aEmploy.updateOne({
+                    status: "Đã tạo tài khoản",
+                });
+                res.status(200).json(saveUser);
+            }else{
+                res.status(200).json(saveUser);
+            }
+            
         } catch (error) {
             res.status(500).json(error);
         }
@@ -22,7 +28,7 @@ const userController = {
     getAllUser: async (req,res) => {
         try {
             const allUser = await user.find();
-            res.status(200).json(voucherAll);
+            res.status(200).json(allUser);
         } catch (error) {
             res.status(500).json(error);
         }
@@ -30,7 +36,7 @@ const userController = {
      //GET A USER
      getAUser: async (req, res)=>{
         try {
-            const aUser =await user.findOne(req.params.id).populate("orders");
+            const aUser =await user.findOne(req.params.id);
             res.status(200).json(aUser);
         } catch (error) {
             res.status(500).json(error);

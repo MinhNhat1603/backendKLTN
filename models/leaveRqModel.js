@@ -1,13 +1,17 @@
 const mongoose = require('mongoose')
-//Đơn Ứng tiền
+//Đơn xin nghi phep
 const leaveRqSchema = mongoose.Schema({
     employee:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'employees' 
+        type: String,
+        required: "employeerequired",
+        ref: "employee"
     },
     idLeaveRq:{
         type: String,
         required: "id is required"
+    },
+    leaveRqType:{   //Nghỉ phép/ nghỉ làm
+        type: String
     },
     reason:{      //lí do
         type: String
@@ -26,7 +30,7 @@ const leaveRqSchema = mongoose.Schema({
         required: "status is required"
     },
     approvedUser:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'users'
     }
 },{timestamps: true}

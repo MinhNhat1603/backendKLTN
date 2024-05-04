@@ -21,7 +21,8 @@ const employeesSchema = new mongoose.Schema({
         type: String
     },
     citizenIdentity:{   //CCCD
-        type: Number
+        type: Number,
+        required: "citizenIdentity is required"
     },
     phone:{
         type: Number,
@@ -36,14 +37,19 @@ const employeesSchema = new mongoose.Schema({
     email:{
         type: String
     },
+    insuranceCode:{ //Mã BHXH
+        type: String,
+        required: "Insurance is required"
+    },
     position:{  //Chức vụ
         type: String,
         ref: "positions",
         required: "position is required"
     },
     department:{    //Phòng ban
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "departments"
+        type: String,
+        ref: "departments",
+        required: "department is required"
     },
     salary:{    //Lương
         type: Number

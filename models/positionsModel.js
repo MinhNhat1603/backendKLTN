@@ -6,8 +6,7 @@ const positionSchema = mongoose.Schema({
         required: "title is required"
     },
     description:{
-        type: Number,
-        required: "salary is required"
+        type: String,
     },
     allowance:{
         type: Number

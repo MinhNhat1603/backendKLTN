@@ -4,17 +4,10 @@ const employController = {
     addEmploy: async (req,res) => {
         try {
             var newEmploy =new employee(req.body);
-
-            const fullName = newEmploy.name;
-            const words = fullName.split(' ');
-    
-            // Lấy ký tự đầu tiên của mỗi từ và chuyển thành chữ hoa
-            const initials = words.map(word => word.charAt(0).toUpperCase());
             
-            // Kết hợp các ký tự đầu thành chuỗi duy nhất
-            var id = initials.join('');
+            var id = "TV";
             var count = 1;
-            // Lấy tên cần tìm từ req.params hoặc req.query, tùy thuộc vào cách bạn gửi dữ liệu
+
             var newID = `${id}${(count).toString().padStart(2, '0')}`;
             var existingEmployee = await employee.findOne({ idEmployee: newID });
 
@@ -25,6 +18,7 @@ const employController = {
             }
 
             newEmploy.idEmployee = newID;
+            newEmploy.status = "Đang thử việc/ đạo tạo"
             const saveEmploy = await newEmploy.save();
             res.status(200).json(saveEmploy);
         } catch (error) {
@@ -54,6 +48,45 @@ const employController = {
         try {
             const employ =await employee.findOne({ idEmployee: req.params.id});
             await employ.updateOne({$set: req.body});
+            res.status(200).json("Update successfully!");
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+    employNotAchieved: async (req, res)=>{
+        try {
+            const employ =await employee.findOne({ idEmployee: req.params.id});
+            await employ.updateOne({
+                status: "Không đạt",
+            });
+            res.status(200).json("Update successfully!");
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+    employAcheieved: async (req, res)=>{
+        try {
+            const employ =await employee.findOne({ idEmployee: req.params.id});
+            const fullName = employ.name;
+            const words = fullName.split(' ');
+    
+            const initials = words.map(word => word.charAt(0).toUpperCase());
+            
+            var id = initials.join('');
+            var count = 1;
+
+            var newID = `${id}${(count).toString().padStart(2, '0')}`;
+            var existingEmployee = await employee.findOne({ idEmployee: newID });
+
+            while (existingEmployee != null) {
+                count ++;
+                newID = `${id}${(count).toString().padStart(2, '0')}`;
+                existingEmployee = await employee.findOne({ idEmployee: newID });
+            }
+            await employ.updateOne({
+                status: "Đã đạt",
+                idEmployee: newID
+            });
             res.status(200).json("Update successfully!");
         } catch (error) {
             res.status(500).json(error);

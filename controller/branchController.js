@@ -39,6 +39,18 @@ const branchController = {
             res.status(500).json(error);
         }
     },
+    employIn:  async (req, res)=>{
+        try {
+            const aBranch = await branch.findOne({ idBranch: req.params.id});
+            let NumberIn = 0;
+            for (let i = 0; i < aBranch.department.length; i++){
+                NumberIn += await employee.countDocuments({department : aBranch.department[i]});
+            }
+            res.status(200).json(NumberIn);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
 };
 
 module.exports = branchController;

@@ -12,6 +12,14 @@ const authRoute = require("./routes/authRoute");
 const employRoute = require("./routes/employRoute");
 const branchRoute = require("./routes/branchRoute");
 const departmentRoute = require("./routes/departmentRoute");
+const positionRoute = require("./routes/positionRoute");
+const contractRoute = require("./routes/contractRoute");
+const decisionRoute = require("./routes/decisionRoute");
+const advanceRqRoute = require("./routes/advanceRqRoute");
+const leaveRqRoute = require("./routes/leaveRqRoute");
+const salaryDecRoute = require("./routes/salaryDecRoute");
+const equipRoute = require("./routes/equipRoute");
+const insuranceRoute = require("./routes/insuranceRoute");
 
 app.use(cors({credentials: true, origin: true}));
 
@@ -34,7 +42,15 @@ app.use("/auth", authRoute);
 app.use("/employ", employRoute);
 app.use("/branch", branchRoute);
 app.use("/department", departmentRoute);
+app.use("/position", positionRoute);
+app.use("/contract", contractRoute);
+app.use("/decision", decisionRoute);
+app.use("/advanceRq", advanceRqRoute);
+app.use("/leaceRq", leaveRqRoute);
+app.use("/salaryDec", salaryDecRoute);
+app.use("/equip", equipRoute);
+app.use("/insurance", insuranceRoute);
 
 app. listen(3000,()=>{
-    console.log("Server running.")
+    console.log("Server running.");
 });

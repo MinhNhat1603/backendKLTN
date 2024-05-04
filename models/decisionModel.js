@@ -2,8 +2,9 @@ const mongoose = require('mongoose')
 // Quyet dinh
 const decisionSchema = new mongoose.Schema({
     employee:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'employees' 
+        type: String,
+        required: "employeeis required",
+        ref: "employees"
     },
     idDecision:{
         type: String,
@@ -18,11 +19,11 @@ const decisionSchema = new mongoose.Schema({
         required: "sign date is required"
     },
     month:{ //thời gian thực hiện
-        type: String,
+        type: Number,
         required: "start date is required"
     },
     year:{
-        type: String,
+        type: Number,
         required: "end date is required"
     },
     description:{
@@ -38,11 +39,11 @@ const decisionSchema = new mongoose.Schema({
         type: String
     },
     approvedUser:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'users'
     },
     userCreate:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'users'
     }
 },{timestamps: true}

@@ -1,30 +1,26 @@
 const user = require("../models/usersModel");
 const jwt = require("jsonwebtoken");
-const key = 'tieuluan';
+const key = 'KhoaLuan';
 
 const authController = {
     loginUser:async (req, res)=>{
         try {
-            const auser =await user.findOne({userName: req.body.userName});
-            const apass= req.body.password;
+            const auser =await user.findOne({
+                userName: req.body.userName,
+                password: req.body.password
+            });
             if(!auser){
-                return res.status(404).json("Wrong username");
-            }
-            if(apass === auser.password && auser){ 
+                return res.status(404).json("Wrong username or password");
+            }else{ 
                 const accessToken = jwt.sign({
-                    id: auser.id,
-                    userName: auser.userName,
-                    role: auser.role
+                    userName: auser.userName
                 },
                 key, 
-                {expiresIn:"24h"}
+                {expiresIn:"8h"}
                 );
                 const {password,...others}=auser._doc;
                 return res.status(200).json({...others,accessToken});      
-            }
-            else{
-                return res.status(404).json("Wrong password");
-            }      
+            }     
         } catch (error) {
             return res.status(500).json(error);
         }
@@ -36,6 +32,22 @@ const authController = {
         } catch (error) {
             res.status(500).json(error);
         }
-    }  
+    },
+
+    veryfyToken: (req,res,next)=>{
+        const token= req.headers.token;
+        if(token){
+            //Bearer token
+            const accessToken =token.split(" ")[1];
+            jwt.verify(accessToken, key,(error,user)=>{
+                if(error){
+                    res.status(403).json("Token is not valid")
+                }
+                next();
+            });
+        }else{
+            res.status(401).json("you are not authenticated")
+        }
+    },
 }
 module.exports = authController;
