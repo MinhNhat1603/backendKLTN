@@ -21,9 +21,9 @@ const positionController = {
         }
     },
      //GET A position
-     getAPosition: async (req, res)=>{
+    getAPosition: async (req, res)=>{
         try {
-            const aPosition =await position.findById(req.params.id);
+            const aPosition =await position.findOne(req.params.id);
             res.status(200).json(aPosition);
         } catch (error) {
             res.status(500).json(error);
@@ -33,7 +33,7 @@ const positionController = {
     //UPDATE position
     updateUser: async (req, res)=>{
         try {
-            const aPosition=await position.findById(req.params.id);
+            const aPosition=await position.findOne(req.params.id);
             await aPosition.updateOne({$set: req.body});
             res.status(200).json("Update successfully!");
         } catch (error) {
@@ -41,10 +41,19 @@ const positionController = {
         }
     },
 
-    //Số nhân viên cos chuc vu
-    employOf:  async (req, res)=>{
+    //Số nhân viên co chuc vu
+    countEmployOf:  async (req, res)=>{
         try {
             const Numberof =await employee.countDocuments({position : req.params.id});
+            res.status(200).json(Numberof);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+    
+    employOf: async (req, res)=>{
+        try {
+            const Numberof =await employee.find({position : req.params.id});
             res.status(200).json(Numberof);
         } catch (error) {
             res.status(500).json(error);

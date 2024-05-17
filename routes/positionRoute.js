@@ -13,7 +13,10 @@ router.get("/:id",positonController.getAPosition);
 //UPDATE position
 router.put("/:id",positonController.updateUser);
 
-//Nhan vien co chuc vu
+//Danh sach Nhan vien co chuc vu
 router.put("/employ/:id",positonController.employOf);
+
+//Số Nhan vien co chuc vu
+router.put("/countEmploy/:id",positonController.countEmployOf);
 
 module.exports =router;

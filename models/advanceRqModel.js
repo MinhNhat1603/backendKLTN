@@ -11,13 +11,13 @@ const advanceRqSchema = mongoose.Schema({
         required: "id is required",
         unique: true
     },
-    money:{
+    year:{
         type: Number
     },
     month:{
         type: Number
     },
-    year:{
+    money:{
         type: Number
     },
     reason:{      //lí do

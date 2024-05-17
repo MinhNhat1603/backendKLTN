@@ -5,7 +5,7 @@ const router =require("express").Router();
 router.post ("/", salaryDecController.addSalaryDec);
 
 //GET ALL position
-router.get("/", salaryDecController.getAllSalaryDec);
+router.get("/getAll", salaryDecController.getAllSalaryDec);
 
 //GET A position
 router.get("/:id",salaryDecController.getASalaryDec);
@@ -14,9 +14,9 @@ router.get("/:id",salaryDecController.getASalaryDec);
 router.put("/:id",salaryDecController.updateSalaryDec);
 
 //Cac queyt dinh tang giam luong cua nhan viene
-router.put("/employ/:id",salaryDecController.employHasSalaryDec);
+router.get("/employ/:id",salaryDecController.employHasSalaryDec);
 
 //download mãu phụ lục tăng lương.
-router.get("/download", salaryDecController.dowloadContractAddendum);
+router.get("/", salaryDecController.dowloadContractAddendum);
 
 module.exports =router;

@@ -24,7 +24,7 @@ const branchSchema = mongoose.Schema({
         required: "status is required"
     },
     representative:{    //Giam doc chi nhanh
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "users"
     },
     departments:[

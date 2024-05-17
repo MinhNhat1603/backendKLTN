@@ -1,8 +1,11 @@
 const mongoose = require('mongoose')
 // bang luongw
-const timeSheetSchema = mongoose.Schema({
-    employee:{
-        type: mongoose.Schema.Types.ObjectId,
+const paySlipSchema = mongoose.Schema({
+    idPaySlip:{
+        type: String,
+        unique: true
+    },employee:{
+        type: String,
         ref: "users"
     },
     year:{
@@ -17,8 +20,7 @@ const timeSheetSchema = mongoose.Schema({
         type: Number
     },
     insurance:{     //tiền bảo hiểm cùng tháng
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "insurance"
+        type: Number
     },
     overTIme:{  //số giờ tăng ca trong tháng
         type: Number
@@ -26,39 +28,21 @@ const timeSheetSchema = mongoose.Schema({
     overTimeMoney:{  //số tiền tăng ca trong tháng
         type: Number
     },
-    decision:[
-        {     //quyết định thưởng/phạt trong tháng
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "decision"
-        }
-    ],
     decisionMoney:{ //tổng tiền theo các quyết định
         type: Number
     },
     positionAllowance:{     //phụ cấp chức vụ
         type: Number
     },
-    leaveHour:{     //số giờ đi làm muộn/về sớm
+    workDay:{     //số giờ đi làm muộn/về sớm
         type: Number
     },
-    leaveMoney:{
+    workSalary:{
         type: Number
     },
     paiLeave:{      //Số ngày nghỉ có phép
         type: Number
     },
-    unpaiLeave:{      //Số ngày nghỉ không phép
-        type: Number
-    },
-    fineUnpaiLeave:{
-        type: Number
-    },
-    advanceRq:[
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "advanceRq"
-        }
-    ],
     advanceMoney:{
         type: Number
     },
@@ -69,11 +53,11 @@ const timeSheetSchema = mongoose.Schema({
         type: String
     },
     userCreate:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'users'
     }
 
 },{timestamps: true}
 )
 
-module.exports = mongoose.model('timeSheet',timeSheetSchema)
+module.exports = mongoose.model('paySlip',paySlipSchema)

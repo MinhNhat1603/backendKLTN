@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 // bang cham cong
 const timeSheetSchema = mongoose.Schema({
     employee:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: "users"
     },
     year:{
@@ -13,7 +13,7 @@ const timeSheetSchema = mongoose.Schema({
         type: Number,
         required: "month is required"
     },
-    day:{
+    date:{
         type: Number,
         required: "day is required"
     },
@@ -23,12 +23,16 @@ const timeSheetSchema = mongoose.Schema({
     checkOut:{
         type: Number
     },
-    overTIme:{
+    overTime:{
         type: Number
     },
-    leaveTime:{
+    workday:{
         type: Number
+    },
+    status:{
+        type: String
     }
+    
 },{timestamps: true}
 )
 

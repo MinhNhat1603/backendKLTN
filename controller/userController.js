@@ -4,20 +4,21 @@ const userController = {
     //ADD USER
     addUser: async (req,res) => {
         try {
-            var newUser =new user();
-            newUser.userName = req.params.id;
-            const aEmploy =await employee.findOne({ idEmployee: req.params.id});
+            const aEmploy =await employee.findOne({ idEmployee:  req.params.id});
             if(aEmploy.status == "Đã đạt"){
-                newUser.password = aEmploy.phone;
-                newUser.role = aEmploy.position;
-                newUser.status = "Đang làm việc";
+                var newUser = new user({
+                    userName: aEmploy.idEmployee,
+                    password: aEmploy.phone,
+                    role: aEmploy.position,
+                    status: "Đang làm việc"
+                });
                 const saveUser = await newUser.save();
                 await aEmploy.updateOne({
                     status: "Đã tạo tài khoản",
                 });
                 res.status(200).json(saveUser);
             }else{
-                res.status(200).json(saveUser);
+                res.status(400).json("Nhân viên chưa đạt yêu cầu");
             }
             
         } catch (error) {

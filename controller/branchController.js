@@ -1,4 +1,5 @@
 const branch = require("../models/branchesModel");
+const employee = require("../models/employeesModel");
 const branchController = {
     //ADD  Branch
     addBranch: async (req,res) => {
@@ -39,14 +40,36 @@ const branchController = {
             res.status(500).json(error);
         }
     },
+    countEmployIn:  async (req, res)=>{
+        try {
+            const aBranch = await branch.findOne({ idBranch: req.params.id});
+            if (!aBranch) {
+                return res.status(404).json({ message: "Branch not found" });
+            }
+    
+            var NumberIn = 0;
+            for (let i = 0; i < aBranch.departments.length; i++){
+                const adepartment = aBranch.departments[i];
+                const employInDepartment = await employee.countDocuments({department : adepartment});
+                NumberIn += employInDepartment;
+            }
+            res.status(200).json(NumberIn);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
     employIn:  async (req, res)=>{
         try {
             const aBranch = await branch.findOne({ idBranch: req.params.id});
-            let NumberIn = 0;
-            for (let i = 0; i < aBranch.department.length; i++){
-                NumberIn += await employee.countDocuments({department : aBranch.department[i]});
+            if (!aBranch) {
+                return res.status(404).json({ message: "Branch not found" });
             }
-            res.status(200).json(NumberIn);
+            var elpoyeeIn =[];
+            for (let i = 0; i < aBranch.departments.length; i++){
+                employs = await employee.find({department : aBranch.departments[i]});
+                elpoyeeIn = elpoyeeIn.concat(employs);
+            }
+            res.status(200).json(elpoyeeIn);
         } catch (error) {
             res.status(500).json(error);
         }

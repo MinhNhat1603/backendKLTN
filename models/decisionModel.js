@@ -20,11 +20,11 @@ const decisionSchema = new mongoose.Schema({
     },
     month:{ //thời gian thực hiện
         type: Number,
-        required: "start date is required"
+        required: "monthe is required"
     },
     year:{
         type: Number,
-        required: "end date is required"
+        required: "year is required"
     },
     description:{
         type: String

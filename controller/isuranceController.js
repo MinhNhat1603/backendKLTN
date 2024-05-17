@@ -1,10 +1,28 @@
 const user = require("../models/usersModel");
+const employee = require("../models/employeesModel");
 const insurance = require("../models/insuranceModel");
 const insuranceController = {
     //ADD Insurance
     addInsurance: async (req,res) => {
         try {
-            const newInsurance =new insurance(req.body);
+            const employ = await employee.findOne({idEmployee: req.params.id})
+            const companyPay = employ.salary / 100 * 21.5;
+            const employeePay = employ.salary / 100 * 10.5
+
+            const acurrentDate = new Date();
+            const year = acurrentDate.getFullYear();
+            const month = acurrentDate.getMonth() + 1;
+
+            const newInsurance =new insurance({
+                employee : employ.idEmployee,
+                isuranceCode: employ.insuranceCode,
+                salaryInsurance: employ.salary,
+                companyPay: companyPay,
+                employeePay: employeePay,
+                year: year,
+                month: month,
+                status: "Chưa xác nhận"
+            });
             const saveInsurance = await newInsurance.save();
             res.status(200).json(saveInsurance);
         } catch (error) {

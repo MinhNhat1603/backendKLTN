@@ -6,12 +6,15 @@ const contractController = {
     addContract: async (req,res) => {
         try {
             const newContract =new contract(req.body);
-            const aEmploy =  employee.findOne({ idEmployee: newContract.employee});
+            const aEmploy = await employee.findOne({ idEmployee: newContract.employee});
+            if(aEmploy == null){
+                res.status(400 ).json("Employ not found");
+            }
             const saveContract = await newContract.save();
             await aEmploy.updateOne({
                 status: "Đã kí hợp đồng",
-                salary: newContract.basicSalary
-
+                salary: newContract.basicSalary,
+                contract: newContract.idContract
             });
             res.status(200).json(saveContract);
         } catch (error) {

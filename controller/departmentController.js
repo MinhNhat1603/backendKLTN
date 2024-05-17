@@ -46,11 +46,21 @@ const departmentController = {
         }
     },
 
-    //Nhan vien trong phong
-    employIn:  async (req, res)=>{
+    //Số Nhan vien trong phong
+    countEmployIn:  async (req, res)=>{
         try {
             const NumberIn =await employee.countDocuments({department : req.params.id});
             res.status(200).json(NumberIn);
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+
+    //Danh sách nhân viên trong phong
+    employIn:  async (req, res)=>{
+        try {
+            const employ =await employee.find({department : req.params.id});
+            res.status(200).json(employ);
         } catch (error) {
             res.status(500).json(error);
         }

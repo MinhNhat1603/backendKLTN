@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 //bảo hiểm xã hội
 const insuranceSchema = mongoose.Schema({
     employee:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'employees' 
     },
     isuranceCode:{
@@ -13,7 +13,7 @@ const insuranceSchema = mongoose.Schema({
         type: String,
         required: "location is required"
     },
-    companyPay:{      //lí do
+    companyPay:{      
         type: Number
     },
     employeePay:{    
@@ -29,9 +29,8 @@ const insuranceSchema = mongoose.Schema({
         type: String
     },
     userCreate:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users',
-        required: "user create is required"
+        type: String,
+        ref: 'users'
     }
 },{timestamps: true}
 )

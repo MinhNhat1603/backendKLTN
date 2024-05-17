@@ -6,10 +6,6 @@ const leaveRqSchema = mongoose.Schema({
         required: "employeerequired",
         ref: "employee"
     },
-    idLeaveRq:{
-        type: String,
-        required: "id is required"
-    },
     leaveRqType:{   //Nghỉ phép/ nghỉ làm
         type: String
     },
@@ -20,10 +16,10 @@ const leaveRqSchema = mongoose.Schema({
         type: String
     },
     timeStart:{
-        type: String
+        type: Number
     },
     timeEnd:{
-        type: String
+        type: Number
     },
     status:{    
         type: String,

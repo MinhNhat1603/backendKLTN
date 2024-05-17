@@ -2,7 +2,7 @@ const insuranceController = require("../controller/isuranceController");
 const router =require("express").Router();
 
 //ADD A contract
-router.post ("/", insuranceController.addInsurance);
+router.post ("/:id", insuranceController.addInsurance);
 
 //GET ALL contract
 router.get("/", insuranceController.getAllInsurance);

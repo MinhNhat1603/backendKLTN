@@ -2,9 +2,21 @@ const user = require("../models/usersModel");
 const leaveRq = require("../models/leaveRqModel");
 const leaveRqController = {
     //ADD leaveRq
-    addLeaveRq: async (req,res) => {
+    addLeaveRq: async (req, res) => {
         try {
-            const newLeaveRq =new leaveRq(req.body);
+            const aLeaveRq = req.body;
+            const timeStart = new Date(aLeaveRq.timeStart); // Đầu vào : "2022-03-25"
+            const timeEnd = new Date(aLeaveRq.timeEnd);
+            const newLeaveRq = new leaveRq({
+                employee: req.params.id,
+                leaveRqType:aLeaveRq.leaveRqType,
+                reason: aLeaveRq.reason,
+                image: aLeaveRq.image,
+                timeStart: timeStart,
+                timeEnd: timeEnd,
+                status: "Chưa duyệt",
+
+            });
             const saveLeaveRq = await newLeaveRq.save();
             res.status(200).json(saveLeaveRq);
         } catch (error) {
@@ -12,7 +24,7 @@ const leaveRqController = {
         }
     },
     //GET ALL leaveRq
-    getAllLeaveRq: async (req,res) => {
+    getAllLeaveRq: async (req, res) => {
         try {
             const allLeaveRq = await leaveRq.find();
             res.status(200).json(allLeaveRq);
@@ -20,10 +32,10 @@ const leaveRqController = {
             res.status(500).json(error);
         }
     },
-     //GET A leaveRq
-    getALeaveRq: async (req, res)=>{
+    //GET A leaveRq
+    getALeaveRq: async (req, res) => {
         try {
-            const aLeaveRq =await leaveRq.findOne( {idLeaveRq: req.params.id})
+            const aLeaveRq = await leaveRq.findOne({ idLeaveRq: req.params.id })
             res.status(200).json(aLeaveRq);
         } catch (error) {
             res.status(500).json(error);
@@ -31,25 +43,25 @@ const leaveRqController = {
     },
 
     //UPDATE leaveRq
-    updateLeaveRq: async (req, res)=>{
+    updateLeaveRq: async (req, res) => {
         try {
-            const aLeaveRq =await leaveRq.findOne( {idLeaveRq: req.params.id})
-            await aLeaveRq.updateOne({$set: req.body});
+            const aLeaveRq = await leaveRq.findOne({ idLeaveRq: req.params.id })
+            await aLeaveRq.updateOne({ $set: req.body });
             res.status(200).json("Update successfully!");
         } catch (error) {
             res.status(500).json(error);
         }
     },
-    employHasLeaveRq: async (req, res)=>{
+    employHasLeaveRq: async (req, res) => {
         try {
-            const aLeaveRq =await leaveRq.findOne( {employee: req.params.id})
+            const aLeaveRq = await leaveRq.findOne({ employee: req.params.id })
             res.status(200).json(aLeaveRq);
         } catch (error) {
             res.status(500).json(error);
         }
     },
 
-    
+
 
     // //DELETE USER
     // deleteUser: async (req, res)=>{

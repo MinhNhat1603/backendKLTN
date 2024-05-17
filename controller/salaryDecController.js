@@ -3,6 +3,8 @@ const path = require('path');
 const user = require("../models/usersModel");
 const employee = require("../models/employeesModel");
 const salaryDec = require("../models/salaryDecModel");
+const contract = require("../models/contractsModel");
+
 const salaryDecController = {
     //ADD salaryDec
     addSalaryDec: async (req,res) => {
@@ -88,11 +90,15 @@ const salaryDecController = {
     // Thêm phụ lục vào hợp đồng và cập nhập lương
     addContractAddendum:async (req, res)=>{
         try {
-            const aSalaryDec =await salaryDec.findOne( {idSalaryDec: req.params.id})
+            const aSalaryDec = await salaryDec.findOne( {idSalaryDec: req.params.id})
             await aSalaryDec.updateOne({status: "Đã duyệt"});
-            const aEmploy =await employee.findOne({ idEmployee: newSalaryDec.employee});
+            const aEmploy = await employee.findOne({ idEmployee: aSalaryDec.employee});
             await aEmploy.updateOne({
                 salary: aSalaryDec.newSalary,
+            });
+            const aContract = await contract.findOne({ employee: aSalaryDec.employee});
+            await aContract.updateOne({
+                contractAddendum: aSalaryDec.idSalaryDec,
             });
             res.status(200).json("Update successfully!");
         } catch (error) {

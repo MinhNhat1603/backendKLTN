@@ -20,6 +20,8 @@ const leaveRqRoute = require("./routes/leaveRqRoute");
 const salaryDecRoute = require("./routes/salaryDecRoute");
 const equipRoute = require("./routes/equipRoute");
 const insuranceRoute = require("./routes/insuranceRoute");
+const timeSheetRoute = require("./routes/timeSheetRoute");
+const paySlipRoute = require("./routes/paySlipRoute");
 
 app.use(cors({credentials: true, origin: true}));
 
@@ -46,10 +48,12 @@ app.use("/position", positionRoute);
 app.use("/contract", contractRoute);
 app.use("/decision", decisionRoute);
 app.use("/advanceRq", advanceRqRoute);
-app.use("/leaceRq", leaveRqRoute);
+app.use("/leaveRq", leaveRqRoute);
 app.use("/salaryDec", salaryDecRoute);
 app.use("/equip", equipRoute);
 app.use("/insurance", insuranceRoute);
+app.use("/timeSheet", timeSheetRoute);
+app.use("/paySlip", paySlipRoute);
 
 app. listen(3000,()=>{
     console.log("Server running.");

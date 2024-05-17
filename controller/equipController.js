@@ -50,6 +50,8 @@ const equipController = {
             res.status(500).json(error);
         }
     },
+    
+    
     // //DELETE USER
     // deleteUser: async (req, res)=>{
     //     try {
