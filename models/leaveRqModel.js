@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const leaveRqSchema = mongoose.Schema({
     employee:{
         type: String,
-        required: "employeerequired",
+        required: "employee required",
         ref: "employee"
     },
     leaveRqType:{   //Nghỉ phép/ nghỉ làm
@@ -32,4 +32,4 @@ const leaveRqSchema = mongoose.Schema({
 },{timestamps: true}
 )
 
-module.exports = mongoose.model('leave',leaveRqSchema)
+module.exports = mongoose.model('leaveRq',leaveRqSchema)

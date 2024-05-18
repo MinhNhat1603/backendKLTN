@@ -10,7 +10,7 @@ const userController = {
                     userName: aEmploy.idEmployee,
                     password: aEmploy.phone,
                     role: aEmploy.position,
-                    status: "Đang làm việc"
+                    status: "Đã tạo tài khoản"
                 });
                 const saveUser = await newUser.save();
                 await aEmploy.updateOne({

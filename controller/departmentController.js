@@ -19,7 +19,7 @@ const departmentController = {
     //GET ALL Branch
     getAll: async (req,res) => {
         try {
-            const departmentAll = await department.find();
+            const departmentAll = await department.find({branch: req.params.id});
             res.status(200).json(departmentAll);
         } catch (error) {
             res.status(500).json(error);

@@ -5,10 +5,10 @@ const leaveRqController = {
     addLeaveRq: async (req, res) => {
         try {
             const aLeaveRq = req.body;
-            const timeStart = new Date(aLeaveRq.timeStart); // Đầu vào : "2022-03-25"
+            const timeStart = new Date(aLeaveRq.timeStart); // Đầu vào : "  "
             const timeEnd = new Date(aLeaveRq.timeEnd);
             const newLeaveRq = new leaveRq({
-                employee: req.params.id,
+                employee: aLeaveRq.employee,
                 leaveRqType:aLeaveRq.leaveRqType,
                 reason: aLeaveRq.reason,
                 image: aLeaveRq.image,
@@ -35,7 +35,7 @@ const leaveRqController = {
     //GET A leaveRq
     getALeaveRq: async (req, res) => {
         try {
-            const aLeaveRq = await leaveRq.findOne({ idLeaveRq: req.params.id })
+            const aLeaveRq = await leaveRq.findById(req.params.id)
             res.status(200).json(aLeaveRq);
         } catch (error) {
             res.status(500).json(error);
@@ -45,7 +45,7 @@ const leaveRqController = {
     //UPDATE leaveRq
     updateLeaveRq: async (req, res) => {
         try {
-            const aLeaveRq = await leaveRq.findOne({ idLeaveRq: req.params.id })
+            const aLeaveRq = await leaveRq.findById(req.params.id)
             await aLeaveRq.updateOne({ $set: req.body });
             res.status(200).json("Update successfully!");
         } catch (error) {
@@ -54,7 +54,7 @@ const leaveRqController = {
     },
     employHasLeaveRq: async (req, res) => {
         try {
-            const aLeaveRq = await leaveRq.findOne({ employee: req.params.id })
+            const aLeaveRq = await leaveRq.find({ employee: req.params.id })
             res.status(200).json(aLeaveRq);
         } catch (error) {
             res.status(500).json(error);

@@ -14,6 +14,6 @@ router.get("/:id",advanceRqController.getAdvanceRq);
 router.put("/:id",advanceRqController.updateAdvanceRq);
 
 //employ has
-router.put("/employ/:id",advanceRqController.employHasAdvanceRq);
+router.get("/employ/:id",advanceRqController.employHasAdvanceRq);
 
 module.exports =router;

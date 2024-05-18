@@ -5,7 +5,7 @@ const router =require("express").Router();
 router.post ("/", departmentController.add);
 
 //GET ALL Department
-router.get("/", departmentController.getAll);
+router.get("/branch/:id", departmentController.getAll);
 
 //GET A Department
 router.get("/:id", departmentController.getOne);

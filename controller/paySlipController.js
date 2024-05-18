@@ -288,8 +288,9 @@ async function calEmployPaySlip(employ, time) {
     var dayofwork = countWorkDays(firstDay, lastDay);
 
     //Số ngày công nhỏ hơn số ngày làm việc trong tháng(2-6)
+    var status ="Chưa kiểm tra"
     if (workingDay > dayofwork) {
-        return res.status(400).json("Lỗi số ngày làm hãy xem lại các đơn xin nghỉ phép và chấm công");
+        status = "Số ngày làm viêc chưa đúng"
     }
 
     // Tính lương theo số ngày con và tăng ca
@@ -352,7 +353,7 @@ async function calEmployPaySlip(employ, time) {
         paiLeave: paiLeave,
         advanceMoney: totalAdvance,
         totalSalary: totalSalary,
-        status: "Chưa kiểm tra"
+        status: status
     })
     return newPaySlip
 }

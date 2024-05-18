@@ -22,7 +22,7 @@ const employController = {
             }
 
             newEmploy.idEmployee = newID;
-            newEmploy.status = "Đang thử việc/ đạo tạo"
+            newEmploy.status = "Đang thử việc/ đào tạo"
             const saveEmploy = await newEmploy.save();
             res.status(200).json(saveEmploy);
         } catch (error) {
@@ -89,11 +89,15 @@ const employController = {
                 newID = `${id}${(count).toString().padStart(2, '0')}`;
                 existingEmployee = await employee.findOne({ idEmployee: newID });
             }
-            await employ.updateOne({
+            const aEmploy =await employ.findOneAndUpdate(
+                { _id: employ.id },
+                {
                 status: "Đã đạt",
                 idEmployee: newID
-            });
-            res.status(200).json("Update successfully!");
+                },
+                { new: true }
+            );
+            res.status(200).json(aEmploy);
         } catch (error) {
             res.status(500).json(error);
         }

@@ -13,7 +13,7 @@ router.get("/:id",leaveRqController.getALeaveRq);
 //UPDATE contract
 router.put("/:id",leaveRqController.updateLeaveRq);
 
-//Cac don xin nhi cua nhan viene
-router.put("/:id",leaveRqController.employHasLeaveRq);
+//Cac don xin nghi cua nhan viene
+router.get("/employ/:id",leaveRqController.employHasLeaveRq);
 
 module.exports =router;

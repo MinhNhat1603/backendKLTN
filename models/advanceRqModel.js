@@ -6,11 +6,6 @@ const advanceRqSchema = mongoose.Schema({
         required: "employeeis required",
         ref: "employees"
     },
-    idAdvanceRq:{
-        type: String,
-        required: "id is required",
-        unique: true
-    },
     year:{
         type: Number
     },

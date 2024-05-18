@@ -23,7 +23,7 @@ const advanceRqController = {
      //GET A decision
     getAdvanceRq: async (req, res)=>{
         try {
-            const AdvanceRq =await advanceRq.findOne( {idAdvanceRq: req.params.id})
+            const AdvanceRq =await advanceRq.findById(req.params.id)
             res.status(200).json(AdvanceRq);
         } catch (error) {
             res.status(500).json(error);
@@ -33,7 +33,7 @@ const advanceRqController = {
     //UPDATE advanceRq
     updateAdvanceRq: async (req, res)=>{
         try {
-            const AdvanceRq =await advanceRq.findOne( {idAdvanceRq: req.params.id})
+            const AdvanceRq =await advanceRq.findById(req.params.id)
             await AdvanceRq.updateOne({$set: req.body});
             res.status(200).json("Update successfully!");
         } catch (error) {

@@ -25,12 +25,12 @@ const branchSchema = mongoose.Schema({
     },
     representative:{    //Giam doc chi nhanh
         type: String,
-        ref: "users"
+        ref: "employees"
     },
     departments:[
         {
             type: String,
-            ref: "product"
+            ref: "departments"
         }
     ]
 },{timestamps: true}

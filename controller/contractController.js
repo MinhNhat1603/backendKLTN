@@ -8,35 +8,39 @@ const contractController = {
             const newContract =new contract(req.body);
             const aEmploy = await employee.findOne({ idEmployee: newContract.employee});
             if(aEmploy == null){
-                res.status(400 ).json("Employ not found");
+                return res.status(400 ).json("Employ not found");
+            }
+            if(aEmploy.status === "Đang thử việc/ đào tạo"){
+                return res.status(400 ).json("Nhân viên chưa được tạo tài khoản")
             }
             const saveContract = await newContract.save();
             await aEmploy.updateOne({
-                status: "Đã kí hợp đồng",
+                status: "Nhân viên hợp đồng",
                 salary: newContract.basicSalary,
-                contract: newContract.idContract
+                contract: newContract.idContract,
+                position: newContract.position
             });
-            res.status(200).json(saveContract);
+            return res.status(200).json(saveContract);
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     //GET ALL contract
     getAllContract: async (req,res) => {
         try {
             const allContract = await contract.find();
-            res.status(200).json(allContract);
+            return res.status(200).json(allContract);
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
      //GET A contract
     getAContract: async (req, res)=>{
         try {
             const aContract =await contract.findOne( {idContract: req.params.id})
-            res.status(200).json(aContract);
+            return res.status(200).json(aContract);
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
 
@@ -45,17 +49,17 @@ const contractController = {
         try {
             const aContract =await contract.findOne( {idContract: req.params.id})
             await aContract.updateOne({$set: req.body});
-            res.status(200).json("Update successfully!");
+            return res.status(200).json("Update successfully!");
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     employHasContract:async (req, res)=>{
         try {
             const Contract =await contract.find( {employee: req.params.id})
-            res.status(200).json(Contract);
+            return res.status(200).json(Contract);
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
 
@@ -63,9 +67,9 @@ const contractController = {
     // deleteUser: async (req, res)=>{
     //     try {
     //         await user.findByIdAndDelete(req.params.id);
-    //         res.status(200).json("Delete successfully!");
+    //         return res.status(200).json("Delete successfully!");
     //     } catch (error) {
-    //         res.status(500).json(error);
+    //         return res.status(500).json(error);
     //     }
     // },
 };
