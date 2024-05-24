@@ -2,7 +2,7 @@ const timeSheetController = require("../controller/timeSheetController");
 const router =require("express").Router();
 
 
-router.post("/checkIn/:id", timeSheetController.checkeIn);
+router.post("/checkIn/:id", timeSheetController.fakecheckeIn);
 
 router.put("/checkOut/:id", timeSheetController.checkOut);
 

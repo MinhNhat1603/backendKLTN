@@ -25,11 +25,23 @@ const paySlipController = {
             }
             const time = new Date();
             for (const item of elpoyeeIn) {
-                const newPaySlip = calEmployPaySlip(item, time);
+                const newPaySlip = await calEmployPaySlip(item, time);
                 await newPaySlip.save();
             }
 
             res.status(200).json("Đã xong");
+
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
+    calculationaPaySlip: async (req, res) => {
+        try {
+            const employ = await employee.findOne({ idEmployee: req.params.id })
+            const time = new Date();
+            const newPaySlip = await calEmployPaySlip(employ, time);
+
+            res.status(200).json(newPaySlip);
 
         } catch (error) {
             res.status(500).json(error);
@@ -140,7 +152,7 @@ const paySlipController = {
             res.status(500).json(error);
         }
     },
-    
+
 
     getApaySlip: async (req, res) => {
         try {
@@ -150,62 +162,6 @@ const paySlipController = {
             res.status(500).json(error);
         }
     },
-    // dataCollection:async (req, res)=>{
-    //     try  {
-    //         const time = new Date();
-    //         const year = time.getFullYear();
-    //         const month = time.getMonth();
-    //         const firstDay = new Date(year, month, 1, 0, 0, 0)
-    //         const lastDay = new Date(year, month, totalDays, 0, 0, 0);
-
-    //         const employ = await employee.findOne({idEmployee: req.params.id});
-    //         const aPosition =await position.findOne({title: employ.position});
-    //         const aInsurance = await insurance.findOne({
-    //             employee: employ.idEmployee,
-    //             year: year,
-    //             month: month
-    //         });
-    //         const aContract = await contract.findOne({
-    //             idContract : employ.contract,
-    //             employee: employ.idEmployee
-    //         });
-    //         const atimeSheets = await timeSheet.find({
-    //             employee: employ.idEmployee,
-    //             year: year,
-    //             month: month
-    //         });
-    //         const decisions = await decision.find({
-    //             employee: employ.idEmployee,
-    //             year: year,
-    //             month: month
-    //         });
-    //         const advanceRqs = await advanceRq.fin({
-    //             employee: employ.idEmployee,
-    //             year: year,
-    //             month: month,
-    //             status:"Đã duyệt"
-    //         });
-
-    //         const leaveRq1 = await leaveRq.find({
-    //             employee: employ.idEmployee,
-    //             timeStart: { $lte: lastDay, $gte: firstDay },
-    //             leaveRqType: "Nghỉ phép năm",
-    //             status: "Đã duyệt"
-    //         })
-    //         const leaveRq2 = await leaveRq.find({
-    //             employee: employ.idEmployee,
-    //             timeEnd: { $gte: firstDay, $lte: lastDay },
-    //             leaveRqType: "Nghỉ phép năm",
-    //             status: "Đã duyệt"
-    //         })
-    //         const leaveRqs = Array.from(new Set([...leaveRq1, ...leaveRq2].map(obj => JSON.stringify(obj)))).map(str => JSON.parse(str));
-
-
-    //         res.status(200).json(aPosition);
-    //     } catch (error) {
-    //         res.status(500).json(error);
-    //     }
-    // },
 
 
 };
@@ -215,7 +171,7 @@ module.exports = paySlipController;
 function countWorkDays(startDate, endDate) {
     let workDays = 0;
 
-    for (let currentDay = new Date(startDate); currentDay <= endDate; currentDay.setDate(currentDay.getDate() + 1)) {
+    for (let currentDay = new Date(startDate); currentDay < endDate; currentDay.setDate(currentDay.getDate() + 1)) {
         const dayOfWeek = currentDay.getDay();
         if (dayOfWeek !== 0 && dayOfWeek !== 6) {
             workDays++;
@@ -226,12 +182,12 @@ function countWorkDays(startDate, endDate) {
 }
 
 async function calEmployPaySlip(employ, time) {
-    
+
     const year = time.getFullYear();
     const month = time.getMonth();  //Tinh tiến vào tháng sau nên không +1
     const totalDays = new Date(year, month - 1, 0).getDate();
-    const firstDay = new Date(year, month, 1, 0, 0, 0)
-    const lastDay = new Date(year, month, totalDays, 0, 0, 0);
+    const firstDay = new Date(year, month - 1, 1, 0, 0, 0)
+    const lastDay = new Date(year, month - 1, totalDays, 0, 0, 0);
 
     //Tính số ngày công và tăng ca từ bẳng lương
     const atimeSheets = await timeSheet.find({
@@ -239,10 +195,10 @@ async function calEmployPaySlip(employ, time) {
         year: year,
         month: month
     })
-    const overTime = 0;
-    const workingDay = 0;
+    var overTime = 0;
+    var workingDay = 0;
     for (const item of atimeSheets) {
-        const day = new Date(year, month - 1, item.date);
+        const day = new Date(year, month - 1, item.date).getDay();
         if (day === 0 || day === 6) {
             overTime += item.overTime;
             overTime += item.workday * 8;
@@ -252,7 +208,7 @@ async function calEmployPaySlip(employ, time) {
         }
     }
     const dayWork = workingDay;
-    const paiLeave = 0;
+    var paiLeave = 0;
 
     //Tính số ngày nhỉ phép năm có trong tháng
     const leaveRq1 = await leaveRq.find({
@@ -288,24 +244,29 @@ async function calEmployPaySlip(employ, time) {
     var dayofwork = countWorkDays(firstDay, lastDay);
 
     //Số ngày công nhỏ hơn số ngày làm việc trong tháng(2-6)
-    var status ="Chưa kiểm tra"
+    var status = "Chưa kiểm tra"
     if (workingDay > dayofwork) {
         status = "Số ngày làm viêc chưa đúng"
     }
 
     // Tính lương theo số ngày con và tăng ca
-    const workSalary = (employ.salary / dayofwork * workingDay);
-    const overTimeMoney = (employ.salary / dayofwork * overTime * 2);
-
+    var workSalary = (employ.salary / dayofwork * workingDay).toFixed(0);
+    workSalary = Math.round(workSalary / 1000) * 1000;
+    var overTimeMoney = ((employ.salary / dayofwork) / 8 * overTime * 2).toFixed(0);
+    overTimeMoney = Math.round(overTimeMoney / 1000) * 1000;
     //Tính lương phụ cấp hàng tháng và phụ cấp chức vụ
     const aContract = await contract.findOne({
         idContract: employ.contract
     })
+    var allowanceMoney = 0
+    for (let i = 0; i < aContract.allowance.length; i++) {
+        allowanceMoney += aContract.allowance[i].money;
+    }
     const aPosition = await position.findOne({
         title: employ.position
     })
 
-    //Tien thưởng/phạt trong tháng
+    // Tien thưởng/phạt trong tháng
     const decisions = await decision.find({
         employee: employ.idEmployee,
         year: year,
@@ -335,8 +296,9 @@ async function calEmployPaySlip(employ, time) {
         totalAdvance += item.money
     }
 
-    const totalSalary = workSalary + overTimeMoney + aContract.allowance + aPosition.allowance + totalDecision + aInsurance.employeePay + totalAdvance;
-    const idPaySlip = `${year}/${month}-${employ.idEmployee}`
+    const totalSalary = workSalary + overTimeMoney + allowanceMoney + aPosition.allowance + totalDecision - aInsurance.employeePay + totalAdvance;
+
+    const idPaySlip = `${year}-${month}.${employ.idEmployee}`
     const newPaySlip = new paySlip({
         idPaySlip: idPaySlip,
         employee: employ.idEmployee,
@@ -355,5 +317,5 @@ async function calEmployPaySlip(employ, time) {
         totalSalary: totalSalary,
         status: status
     })
-    return newPaySlip
+    return newPaySlip;
 }

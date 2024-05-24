@@ -3,7 +3,7 @@ const paySlipController = require("../controller/paySlipController");
 const router =require("express").Router();
 
 //Tạo bảng lương
-router.post ("/:id",paySlipController.calculationPaySlip);
+router.post ("/:id",paySlipController.calculationaPaySlip);
 //Kế toán kiểm tra và duyệt
 router.put ("/accountantCheck",paySlipController.accountantCheck);
 //Giám đốc kiểm tra và duyệt

@@ -1,23 +1,25 @@
-function countWeekendDays(startDate, endDate) {
-    let weekendDays = 0;
+// tải dữ liệu JSON
+var jsonInput = '[{"nodeId":1,"reputation":1134},{"nodeId":2,"reputation":547},{"nodeId":3,"reputation":1703},{"nodeId":4,"reputation":-199},{"nodeId":5,"reputation":-306},{"nodeId":6,"reputation":-49},{"nodeId":7,"reputation":1527},{"nodeId":8,"reputation":1223}]'
 
-    // Loop qua mỗi ngày trong khoảng thời gian
-    for (let currentDay = new Date(startDate); currentDay <= endDate; currentDay.setDate(currentDay.getDate() + 1)) {
-        const dayOfWeek = currentDay.getDay();
-        // Nếu là Chủ Nhật (0) hoặc thứ Bảy (6) thì tăng biến đếm
-        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-            weekendDays++;
-        }
-    }
+// tạo một đối tượng Workbook trống
+var workbook = aspose.cells.Workbook()
 
-    return weekendDays;
-}
+// truy cập trang tính trống mặc định
+var worksheet = workbook.getWorksheets().get(0)
 
-const startDate1 = new Date("2024-05-01"); // Ngày bắt đầu của khoảng thời gian thứ nhất
-const endDate1 = new Date("2024-05-31");   // Ngày kết thúc của khoảng thời gian thứ nhất
-const startDate2 = new Date("2024-06-01"); // Ngày bắt đầu của khoảng thời gian thứ hai
-const endDate2 = new Date("2024-06-15");   // Ngày kết thúc của khoảng thời gian thứ hai
+// đặt kiểu
+var factory = aspose.cells.CellsFactory()
+style = factory.createStyle()
+style.getFont().setBold(true) 
+style.getFont().setColor(aspose.cells.Color.getBlueViolet())
 
-const weekendDays1 = countWeekendDays(startDate1, endDate1);
-const weekendDays2 = countWeekendDays(startDate2, endDate2);
-console.log(weekendDays1)
+// đặt JsonLayoutOptions để định dạng
+var layoutOptions = aspose.cells.JsonLayoutOptions()
+layoutOptions.setArrayAsTable(true)
+layoutOptions.setTitleStyle(style)
+
+// nhập dữ liệu JSON vào trang tính mặc định bắt đầu từ ô A1
+aspose.cells.JsonUtility.importData(jsonInput, worksheet.getCells(), 0, 0, layoutOptions)
+
+// lưu tệp kết quả 
+workbook.save("output.xlsx", aspose.cells.SaveFormat.AUTO)

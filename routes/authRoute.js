@@ -7,4 +7,7 @@ router.post ("/login",authController.loginUser);
 //LOGOUT
 router.post ("/logout",authController.logoutUser);
 
+//veryfy
+router.get ("/veryfy",authController.veryfyEmploy);
+
 module.exports =router;
