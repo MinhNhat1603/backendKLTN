@@ -55,6 +55,6 @@ app.use("/insurance", insuranceRoute);
 app.use("/timeSheet", timeSheetRoute);
 app.use("/paySlip", paySlipRoute);
 
-app. listen(3000,()=>{
+app. listen(5000,()=>{
     console.log("Server running.");
 });

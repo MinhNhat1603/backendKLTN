@@ -1,19 +1,23 @@
 const advanceRqController = require("../controller/advanceRqController");
+const authController = require("../controller/authController")
 const router =require("express").Router();
 
-//ADD A contract
-router.post ("/", advanceRqController.addAdvanceRq);
+//ADD A advance
+router.post ("/", authController.veryfyEmploy, advanceRqController.addAdvanceRq);
 
-//GET ALL contract
-router.get("/", advanceRqController.getAllAdvanceRq);
+//GET ALL advance
+router.get("/", authController.veryfyAdmin, advanceRqController.getAllAdvanceRq);
 
-//GET A contract
-router.get("/:id",advanceRqController.getAdvanceRq);
+//GET A advance
+router.get("/:id", authController.veryfyEmploy, advanceRqController.getAdvanceRq);
 
-//UPDATE contract
-router.put("/:id",advanceRqController.updateAdvanceRq);
+//UPDATE advance
+router.put("/:id", authController.veryfyEmploy, advanceRqController.updateAdvanceRq);
 
-//employ has
-router.get("/employ/:id",advanceRqController.employHasAdvanceRq);
+//employ has advance
+router.get("/employ/:id", authController.veryfyEmploy, advanceRqController.employHasAdvanceRq);
+
+//xét duỵet đơn xin ứng tiền
+router.put("/approval/:id", authController.veryfyAdmin, advanceRqController.approvalAdvanceRq);
 
 module.exports =router;

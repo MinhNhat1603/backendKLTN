@@ -1,4 +1,5 @@
 const equipController = require("../controller/equipController");
+
 const router =require("express").Router();
 
 //ADD A contract

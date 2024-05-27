@@ -1,19 +1,20 @@
 const decisionController = require("../controller/decisionController");
+const authController = require("../controller/authController")
 const router =require("express").Router();
 
 //ADD A contract
-router.post ("/", decisionController.addDecision);
+router.post ("/", authController.veryfyAdmin, decisionController.addDecision);
 
 //GET ALL contract
-router.get("/", decisionController.getAllDecision);
+router.get("/", authController.veryfyAdmin, decisionController.getAllDecision);
 
 //GET A contract
-router.get("/:id",decisionController.getADecision);
+router.get("/:id", authController.veryfyEmploy, decisionController.getADecision);
 
 //UPDATE contract
-router.put("/:id",decisionController.updateDecision);
+router.put("/:id", authController.veryfyAdmin, decisionController.updateDecision);
 
 //Employ has
-router.get("/employ/:id",decisionController.employHasDecision);
+router.get("/employ/:id", authController.veryfyEmploy, decisionController.employHasDecision);
 
 module.exports =router;

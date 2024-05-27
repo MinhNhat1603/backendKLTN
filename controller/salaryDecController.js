@@ -30,7 +30,11 @@ const salaryDecController = {
     getASalaryDec: async (req, res)=>{
         try {
             const aSalaryDec =await salaryDec.findOne( {idSalaryDec: req.params.id})
-            res.status(200).json(aSalaryDec);
+            if(req.user == aSalaryDec.employee || req.user =="admin"){
+                return res.status(200).json(aSalaryDec);
+            }else {
+                return res.status(403).json("You do not have permission");
+            }
         } catch (error) {
             res.status(500).json(error);
         }
@@ -48,7 +52,7 @@ const salaryDecController = {
     },
 
     //Đánh giá các tiêu chí tăng lương
-    criteriaEvaluation: async (req, res)=>{
+    checkSalaryDec: async (req, res)=>{
         try {
             const aSalaryDec =await salaryDec.findOne( {idSalaryDec: req.params.id})
             await aSalaryDec.updateOne({status: "Đã kiểm tra"});
@@ -58,17 +62,25 @@ const salaryDecController = {
         }
     },
     // Giam đốc duyệt
-    approvedRq:async (req, res)=>{
+    directorCheck:async (req, res)=>{
         try {
             const aSalaryDec =await salaryDec.findOne( {idSalaryDec: req.params.id})
             await aSalaryDec.updateOne({status: "Đã duyệt"});
+            const aEmploy = await employee.findOne({ idEmployee: aSalaryDec.employee});
+            await aEmploy.updateOne({
+                salary: aSalaryDec.newSalary,
+            });
+            const aContract = await contract.findOne({ employee: aSalaryDec.employee});
+            await aContract.updateOne({
+                contractAddendum: aSalaryDec.idSalaryDec,
+            });
             res.status(200).json("Update successfully!");
         } catch (error) {
             res.status(500).json(error);
         }
     },
 
-    //C&B Tạo quyết định tăng lương Thêm vào phần phụ lục hợp đồng
+    // tải mẫu phụ lục hợp đồng
     dowloadContractAddendum: async (req, res)=>{
         try {
             const filePath = path.join(__dirname, '../resource/PhuLucTangLuong.docx');
@@ -88,28 +100,32 @@ const salaryDecController = {
 
 
     // Thêm phụ lục vào hợp đồng và cập nhập lương
-    addContractAddendum:async (req, res)=>{
-        try {
-            const aSalaryDec = await salaryDec.findOne( {idSalaryDec: req.params.id})
-            await aSalaryDec.updateOne({status: "Đã duyệt"});
-            const aEmploy = await employee.findOne({ idEmployee: aSalaryDec.employee});
-            await aEmploy.updateOne({
-                salary: aSalaryDec.newSalary,
-            });
-            const aContract = await contract.findOne({ employee: aSalaryDec.employee});
-            await aContract.updateOne({
-                contractAddendum: aSalaryDec.idSalaryDec,
-            });
-            res.status(200).json("Update successfully!");
-        } catch (error) {
-            res.status(500).json(error);
-        }
-    },
+    // addContractAddendum:async (req, res)=>{
+    //     try {
+    //         const aSalaryDec = await salaryDec.findOne( {idSalaryDec: req.params.id})
+    //         await aSalaryDec.updateOne({status: "Đã duyệt"});
+    //         const aEmploy = await employee.findOne({ idEmployee: aSalaryDec.employee});
+    //         await aEmploy.updateOne({
+    //             salary: aSalaryDec.newSalary,
+    //         });
+    //         const aContract = await contract.findOne({ employee: aSalaryDec.employee});
+    //         await aContract.updateOne({
+    //             contractAddendum: aSalaryDec.idSalaryDec,
+    //         });
+    //         res.status(200).json("Update successfully!");
+    //     } catch (error) {
+    //         res.status(500).json(error);
+    //     }
+    // },
     //Các quyết định tăng lương của nhân viên
     employHasSalaryDec: async (req, res)=>{
         try {
-            const aSalaryDec =await salaryDec.find( {employee: req.params.id})
-            res.status(200).json(aSalaryDec);
+            if(req.user == req.params.id || req.user =="admin"){
+                const aSalaryDec =await salaryDec.find( {employee: req.params.id})
+                return res.status(200).json(aSalaryDec);
+            }else {
+                return res.status(403).json("You do not have permission");
+            }
         } catch (error) {
             res.status(500).json(error);
         }

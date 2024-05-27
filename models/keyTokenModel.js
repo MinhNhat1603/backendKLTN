@@ -8,7 +8,7 @@ const keySchema = mongoose.Schema({
     createdAt: { // Trường để lưu trữ ngày tạo
         type: Date,
         default: Date.now,
-        index: { expires: '1m' } // Chỉ mục TTL: tài liệu hết hạn sau 30 ngày từ khi tạo
+        index: { expires: '8h' } // Chỉ mục TTL: tài liệu hết hạn sau 30 ngày từ khi tạo
     }
 },{
     timestamps: true,

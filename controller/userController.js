@@ -5,7 +5,7 @@ const userController = {
     addUser: async (req,res) => {
         try {
             const aEmploy =await employee.findOne({ idEmployee:  req.params.id});
-            if(aEmploy.status == "Đã đạt"){
+            if(aEmploy.status !== "Đang thử việc/ đào tạo"){
                 var newUser = new user({
                     userName: aEmploy.idEmployee,
                     password: aEmploy.phone,
@@ -54,16 +54,16 @@ const userController = {
             res.status(500).json(error);
         }
     },
+    changePassword: async (req, res)=>{
+        try {
+            const User =await user.findOne(req.params.id);
+            await User.updateOne({password: req.body.password});
+            res.status(200).json("Update successfully!");
+        } catch (error) {
+            res.status(500).json(error);
+        }
+    },
 
-    // //DELETE USER
-    // deleteUser: async (req, res)=>{
-    //     try {
-    //         await user.findByIdAndDelete(req.params.id);
-    //         res.status(200).json("Delete successfully!");
-    //     } catch (error) {
-    //         res.status(500).json(error);
-    //     }
-    // },
 };
 
 module.exports = userController;

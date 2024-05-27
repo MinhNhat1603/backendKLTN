@@ -24,37 +24,46 @@ const employController = {
             newEmploy.idEmployee = newID;
             newEmploy.status = "Đang thử việc/ đào tạo"
             const saveEmploy = await newEmploy.save();
-            res.status(200).json(saveEmploy);
+            return res.status(200).json(saveEmploy);
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     //GET ALL employ
     getAllEmploy: async (req, res) => {
         try {
             const employALL = await employee.find();
-            res.status(200).json(employALL);
+            return res.status(200).json(employALL);
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     //GET A employ
     getAEmploy: async (req, res) => {
         try {
-            const aEmploy = await employee.findOne({ idEmployee: req.params.id });
-            res.status(200).json(aEmploy);
+            if (req.user == req.params.id || req.user == "admin") {
+                const aEmploy = await employee.findOne({ idEmployee: req.params.id });
+                return res.status(200).json(aEmploy);
+            } else {
+                return res.status(403).json("You do not have permission");
+            }
+
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     //UPDATE employ
     updateEmploy: async (req, res) => {
         try {
-            const employ = await employee.findOne({ idEmployee: req.params.id });
-            await employ.updateOne({ $set: req.body });
-            res.status(200).json("Update successfully!");
+            if (req.user == req.params.id || req.user == "admin") {
+                const employ = await employee.findOne({ idEmployee: req.params.id });
+                await employ.updateOne({ $set: req.body });
+                return res.status(200).json("Update successfully!");
+            } else {
+                return res.status(403).json("You do not have permission");
+            }
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     employNotAchieved: async (req, res) => {
@@ -65,9 +74,9 @@ const employController = {
                 status: "Không đạt",
                 idEmployee: id
             });
-            res.status(200).json("Update successfully!");
+            return res.status(200).json("Update successfully!");
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     employAcheieved: async (req, res) => {
@@ -89,60 +98,17 @@ const employController = {
                 newID = `${id}${(count).toString().padStart(2, '0')}`;
                 existingEmployee = await employee.findOne({ idEmployee: newID });
             }
-            const aEmploy =await employ.findOneAndUpdate(
+            const aEmploy = await employ.findOneAndUpdate(
                 { _id: employ.id },
                 {
-                status: "Đã đạt",
-                idEmployee: newID
+                    status: "Đã đạt",
+                    idEmployee: newID
                 },
                 { new: true }
             );
-            res.status(200).json(aEmploy);
+            return res.status(200).json(aEmploy);
         } catch (error) {
-            res.status(500).json(error);
-        }
-    },
-
-    templateAddNewEmploy: async (req, res) => {
-        try {
-            // const rowHeaders = ['STT', 'Họ và tên', 'Ngày sinh', 'Giới tính', 'Phone', 'Email', 'CCCD', 'Mã BHXH', 'Vị trí', 'Phòng ban'];
-
-            // const workbook = new ExcelJS.Workbook();
-            // const worksheet = workbook.addWorksheet('Sheet1');
-
-            // // Thêm tiêu đề công ty vào dòng đầu tiên
-            // worksheet.addRow(['Công ty cổ phần Vùng trời thông tin']);
-            // worksheet.addRow([]); // Thêm một dòng trống phân cách
-            // // Thêm tiêu đề cột vào tệp Excel
-            // worksheet.addRow(rowHeaders);
-
-            // // Đặt độ rộng cho từng cột
-            // worksheet.columns.forEach((column, index) => {
-            //     column.width = rowHeaders[index].length < 12 ? 12 : rowHeaders[index].length;
-            // });
-
-            // Tạo một tệp Excel tạm thời
-            // const filePath = '../temp/a.xlsx';
-
-            const filePath = path.join(__dirname, '../resource/a.xlsx');
-            // await workbook.xlsx.writeFile(filePath);
-
-            // Trả về tệp Excel cho máy khách
-            res.writeHead(200, {
-                'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'Content-Disposition': 'attachment; filename=excel_with_predefined_headers.xlsx',
-            });
-            const readStream = fs.createReadStream(filePath);
-            readStream.pipe(res);
-
-            // readStream.on('end', () => {
-            //     // Sau khi gửi xong, đóng stream và xoá tệp Excel tạm thời
-            //     readStream.close();
-            //     fs.unlinkSync(filePath);
-            // });
-
-        } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
 
@@ -168,28 +134,19 @@ const employController = {
                 await newEmploy.save();
             }
 
-            
-            res.status(200).json("saveEmploy");
+
+            return res.status(200).json("saveEmploy");
 
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
-    trialEmploy: async (req, res) => {
-        try {
-            const aEmploy = await employee.find({ idEmployee: "TV" });
-            res.status(200).json(aEmploy);
-        } catch (error) {
-            res.status(500).json(error);
-        }
-    },
-    // //disable employ
-    // disableEmploy: async (req, res)=>{
+    // trialEmploy: async (req, res) => {
     //     try {
-    //         await employee.findByIdAndDelete(req.params.id);
-    //         res.status(200).json("Disable successfully!");
+    //         const aEmploy = await employee.find({ idEmployee: "TV" });
+    //         return res.status(200).json(aEmploy);
     //     } catch (error) {
-    //         res.status(500).json(error);
+    //         return res.status(500).json(error);
     //     }
     // },
 };

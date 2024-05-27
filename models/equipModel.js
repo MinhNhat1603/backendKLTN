@@ -3,12 +3,12 @@ const mongoose = require('mongoose')
 const equipSchema = mongoose.Schema({
     employee:{
         type: String,
-        required: "employeerequired",
+        required: "employee is required",
         ref: "employee"
     },
     Name:{  //tên thiết bị
         type: String,
-        required: "id is required"
+        required: true
     },
     quantity:{   //so lượng
         type: String

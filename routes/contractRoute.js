@@ -1,18 +1,21 @@
 const contractController = require("../controller/contractController");
+const authController = require("../controller/authController")
 const router =require("express").Router();
 
 //ADD A contract
-router.post ("/", contractController.addContract);
+router.post ("/", authController.veryfyAdmin, contractController.addContract);
 
 //GET ALL contract
-router.get("/", contractController.getAllContract);
+router.get("/", authController.veryfyAdmin, contractController.getAllContract);
 
 //GET A contract
-router.get("/:id",contractController.getAContract);
+router.get("/:id", authController.veryfyEmploy, contractController.getAContract);
 
 //UPDATE contract
-router.put("/:id",contractController.updateContract);
+router.put("/:id", authController.veryfyAdmin, contractController.updateContract);
 
-//
-router.get("/employ/:id",contractController.employHasContract);
+//Các hợp đồng nhân viên đã ký 
+router.get("/employ/:id", authController.veryfyEmploy, contractController.employHasContract);
+
+
 module.exports =router;

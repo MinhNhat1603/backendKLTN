@@ -8,6 +8,6 @@ router.post ("/login",authController.loginUser);
 router.post ("/logout",authController.logoutUser);
 
 //veryfy
-router.get ("/veryfy",authController.veryfyEmploy);
+router.get ("/veryfy",authController.veryfyToken);
 
 module.exports =router;

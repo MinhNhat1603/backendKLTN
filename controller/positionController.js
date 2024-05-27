@@ -59,16 +59,6 @@ const positionController = {
             res.status(500).json(error);
         }
     },
-
-    // //DELETE USER
-    // deleteUser: async (req, res)=>{
-    //     try {
-    //         await user.findByIdAndDelete(req.params.id);
-    //         res.status(200).json("Delete successfully!");
-    //     } catch (error) {
-    //         res.status(500).json(error);
-    //     }
-    // },
 };
 
 module.exports = positionController;

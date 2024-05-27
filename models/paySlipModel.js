@@ -4,7 +4,8 @@ const paySlipSchema = mongoose.Schema({
     idPaySlip:{
         type: String,
         unique: true
-    },employee:{
+    },
+    employee:{
         type: String,
         ref: "users"
     },
@@ -22,7 +23,7 @@ const paySlipSchema = mongoose.Schema({
     insurance:{     //tiền bảo hiểm cùng tháng
         type: Number
     },
-    overTIme:{  //số giờ tăng ca trong tháng
+    overTime:{  //số giờ tăng ca trong tháng
         type: Number
     },
     overTimeMoney:{  //số tiền tăng ca trong tháng
@@ -32,6 +33,12 @@ const paySlipSchema = mongoose.Schema({
         type: Number
     },
     positionAllowance:{     //phụ cấp chức vụ
+        type: Number
+    },
+    travelAllowance:{     //phụ cấp đi lại
+        type: Number
+    },
+    eatingAllowance:{     //phụ cấp an uống
         type: Number
     },
     workDay:{     //số giờ đi làm muộn/về sớm

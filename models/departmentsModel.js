@@ -11,7 +11,7 @@ const departmentSchema = mongoose.Schema({
     },
     manager:{   //truong phong
         type: String,
-        ref: "users"
+        ref: "employees"
     },
     branch:{
         type: String,

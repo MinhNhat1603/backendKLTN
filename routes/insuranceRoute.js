@@ -1,16 +1,23 @@
 const insuranceController = require("../controller/isuranceController");
+const authController = require("../controller/authController")
 const router =require("express").Router();
 
 //ADD A contract
-router.post ("/:id", insuranceController.addInsurance);
+router.post ("/:id", authController.veryfyAdmin, insuranceController.addInsurance);
 
 //GET ALL contract
-router.get("/", insuranceController.getAllInsurance);
+router.get("/", authController.veryfyAdmin, insuranceController.getAllInsurance);
+
+//GET ALL contract in month
+router.get("/inMonth", authController.veryfyAdmin, insuranceController.getAllInsuranceInMonth );
 
 //GET A contract
-router.get("/:id",insuranceController.getAInsurance);
+router.get("/:id", authController.veryfyEmploy, insuranceController.getAInsurance);
 
 //UPDATE contract
-router.put("/:id",insuranceController.updateInsurance);
+router.put("/:id", authController.veryfyAdmin, insuranceController.updateInsurance);
+
+//employ has insurance
+router.get("/employ/:id", authController.veryfyEmploy, insuranceController.employHasInsuran);
 
 module.exports =router;

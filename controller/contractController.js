@@ -38,7 +38,11 @@ const contractController = {
     getAContract: async (req, res)=>{
         try {
             const aContract =await contract.findOne( {idContract: req.params.id})
-            return res.status(200).json(aContract);
+            if(req.user == aContract.employee || req.user =="admin"){
+                return res.status(200).json(aContract);
+            }else {
+                return res.status(403).json("You do not have permission");
+            }
         } catch (error) {
             return res.status(500).json(error);
         }
@@ -54,24 +58,19 @@ const contractController = {
             return res.status(500).json(error);
         }
     },
+    
     employHasContract:async (req, res)=>{
         try {
-            const Contract =await contract.find( {employee: req.params.id})
-            return res.status(200).json(Contract);
+            if(req.user == req.params.id || req.user =="admin"){
+                const Contract =await contract.find( {employee: req.params.id})
+                return res.status(200).json(Contract);
+            }else {
+                return res.status(403).json("You do not have permission");
+            }
         } catch (error) {
             return res.status(500).json(error);
         }
     },
-
-    // //DELETE USER
-    // deleteUser: async (req, res)=>{
-    //     try {
-    //         await user.findByIdAndDelete(req.params.id);
-    //         return res.status(200).json("Delete successfully!");
-    //     } catch (error) {
-    //         return res.status(500).json(error);
-    //     }
-    // },
 };
 
 module.exports = contractController;

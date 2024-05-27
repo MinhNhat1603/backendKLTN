@@ -67,6 +67,7 @@ const authController = {
             res.status(401).json("you are not authenticated")
         }
     },
+
     veryfyEmploy: (req,res,next)=>{
         const token= req.headers.token;
         if(token){
@@ -77,14 +78,19 @@ const authController = {
                     res.status(403).json("Token is not valid")
                 }
                 req.user = user.userName;
-                // next();
-                res.status(200).json(req.user)
+                // if (req.user === "admin" || req.user === req.body.employee || req.user === req.params.id){
+                //     return next();
+                // } else {
+                //     return res.status(403).json("You do not have permission");
+                // }
+                return next();
+                
             });
         }else{
             res.status(401).json("you are not authenticated")
         }
     },
-    veryfyEmploy: (req,res,next)=>{
+    veryfyAdmin: (req,res,next)=>{
         const token= req.headers.token;
         if(token){
             //Bearer token
@@ -93,9 +99,12 @@ const authController = {
                 if(error){
                     res.status(403).json("Token is not valid")
                 }
-                req.user = user.userName;
-                // next();
-                res.status(200).json(req.user)
+                if( user.userName == "admin"){
+                    req.user = user.userName;
+                    next();
+                }else{
+                    res.status(401).json("you are not authenticated")
+                }
             });
         }else{
             res.status(401).json("you are not authenticated")

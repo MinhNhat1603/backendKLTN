@@ -1,22 +1,23 @@
 const positonController = require("../controller/positionController");
+const authController = require("../controller/authController")
 const router =require("express").Router();
 
 //ADD A position
-router.post ("/", positonController.addPosition);
+router.post ("/", authController.veryfyAdmin, positonController.addPosition);
 
 //GET ALL position
-router.get("/", positonController.getAllPosition);
+router.get("/", authController.veryfyAdmin, positonController.getAllPosition);
 
 //GET A position
-router.get("/:id",positonController.getAPosition);
+router.get("/:id", authController.veryfyAdmin, positonController.getAPosition);
 
 //UPDATE position
-router.put("/:id",positonController.updateUser);
+router.put("/:id", authController.veryfyAdmin, positonController.updateUser);
 
 //Danh sach Nhan vien co chuc vu
-router.put("/employ/:id",positonController.employOf);
+router.put("/employ/:id", authController.veryfyAdmin, positonController.employOf);
 
 //Số Nhan vien co chuc vu
-router.put("/countEmploy/:id",positonController.countEmployOf);
+router.put("/countEmploy/:id", authController.veryfyAdmin, positonController.countEmployOf);
 
 module.exports =router;

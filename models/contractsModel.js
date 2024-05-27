@@ -3,12 +3,12 @@ const mongoose = require('mongoose')
 const contractSchema = new mongoose.Schema({
     employee:{
         type: String,
-        required: "employeeis required",
+        required: "employee is required",
         ref: "employees"
     },
     idContract:{
         type: String,
-        unique: "id Contract unique"  
+        unique: true 
     },
     contractType:{
         type: String,
@@ -35,19 +35,14 @@ const contractSchema = new mongoose.Schema({
         ref: 'departments' 
     },
     basicSalary:{     //Lương cơ bản
-        type: Number,
-        ref: 'Salary'
+        type: Number
     },
-    allowance:[
-        {
-            name: {
-                type: String
-            },
-            money:{
-                type: Number
-            }
-        }
-    ],
+    travelAllowance:{     //trợ cấp đi lại
+        type: Number,
+    },
+    eatingAllowance:{     //trợ cấp ăn uống
+        type: Number,
+    },
     image:{   
         type: String
     },

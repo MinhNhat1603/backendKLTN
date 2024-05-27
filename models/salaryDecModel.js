@@ -3,8 +3,8 @@ const mongoose = require('mongoose')
 const salaryDecisionSchema = new mongoose.Schema({
     employee:{
         type: String,
-        required: "employeerequired",
-        ref: "employee"
+        required: "employee í required",
+        ref: "employees"
     },
     idDecision:{
         type: String,
@@ -35,16 +35,12 @@ const salaryDecisionSchema = new mongoose.Schema({
     newSalary:{      
         type: Number
     },
-    allowance:[
-        {
-            name: {
-                type: String
-            },
-            money:{
-                type: Number
-            }
-        }
-    ],
+    travelAllowance:{     //trợ cấp đi lại
+        type: Number,
+    },
+    eatingAllowance:{     //trợ cấp ăn uống
+        type: Number,
+    },
     image:{     
         type: String
     },
