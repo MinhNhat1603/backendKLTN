@@ -17,10 +17,6 @@ const userSchema = new mongoose.Schema({
     },
     status:{
         type: String,
-    },
-    userCreate:{
-        type: String,
-        ref: 'users'
     }
 },{timestamps: true}
 )

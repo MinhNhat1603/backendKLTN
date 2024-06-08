@@ -1,10 +1,11 @@
 const timeSheetController = require("../controller/timeSheetController");
+const authController = require("../controller/authController");
 const router =require("express").Router();
 
 
-router.post("/checkIn/:id", timeSheetController.fakecheckeIn);
+router.post("/checkIn/:id", authController.veryfyEmploy, timeSheetController.fakecheckeIn);
 
-router.put("/checkOut/:id", timeSheetController.checkOut);
+router.put("/checkOut/:id", authController.veryfyEmploy, timeSheetController.checkOut);
 
 router.put("/update", timeSheetController.updateTimeSheet);
 

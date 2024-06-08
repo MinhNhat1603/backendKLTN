@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 // Quyet dinh
 const salaryDecisionSchema = new mongoose.Schema({
-    employee:{
+    employee:{ // Xem lai thay employee bằng idcontract
         type: String,
         required: "employee í required",
         ref: "employees"
@@ -15,7 +15,7 @@ const salaryDecisionSchema = new mongoose.Schema({
         type: String
     },
     signDate:{
-        type: String,
+        type: Number,
         required: "sign date is required"
     },
     month:{ //thời gian thực hiện

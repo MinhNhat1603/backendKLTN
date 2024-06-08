@@ -42,7 +42,8 @@ const employController = {
     getAEmploy: async (req, res) => {
         try {
             if (req.user == req.params.id || req.user == "admin") {
-                const aEmploy = await employee.findOne({ idEmployee: req.params.id });
+                const aEmploy = await employee.findOne({ idEmployee: req.params.id });  
+                // const aEmploy = await employee.findOne(req.body);
                 return res.status(200).json(aEmploy);
             } else {
                 return res.status(403).json("You do not have permission");
@@ -88,6 +89,7 @@ const employController = {
             const initials = words.map(word => word.charAt(0).toUpperCase());
 
             var id = initials.join('');
+            id = await removeVietnameseDiacritics(id)
             var count = 1;
 
             var newID = `${id}${(count).toString().padStart(2, '0')}`;
@@ -152,3 +154,7 @@ const employController = {
 };
 
 module.exports = employController;
+
+async function removeVietnameseDiacritics(str) {
+    return await str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+}

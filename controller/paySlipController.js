@@ -31,15 +31,20 @@ const paySlipController = {
             const year = time?.getFullYear() ?? new Date().getFullYear();
             const month = time?.getMonth() ?? new Date().getMonth();
             const paySlipPromises = employeeIn.map(async (item) => {
+                await calEmployInSurance(item, time);
                 const idPaySlip = `${year}-${month}.${item?.idEmployee}`;
                 let existingPaySlip = await paySlip.findOne({idPaySlip: idPaySlip });
-                const newPaySlip = await calEmployPaySlip(item, time);
-                if (existingPaySlip) {
+                if (existingPaySlip) {   //xem lai
                     await existingPaySlip.deleteOne();
-                    return await newPaySlip.save();
-                } else {
-                    return await newPaySlip.save();
                 }
+                const newPaySlip = await calEmployPaySlip(item, time);
+                // if (existingPaySlip) {
+                //     await existingPaySlip.deleteOne();
+                //     await newPaySlip.save();
+                // } else {
+                //     await newPaySlip.save();
+                // }
+                await newPaySlip.save();
             });
 
             await Promise.all(paySlipPromises);
@@ -355,6 +360,32 @@ function countWorkDays(startDate, endDate) {
     return count;
 }
 
+async function calEmployInSurance(employ, time){
+    const companyPay = employ.salary / 100 * 21.5;
+    const employeePay = employ.salary / 100 * 10.5
+
+    const year = time?.getFullYear() ?? new Date().getFullYear();
+    const month = time?.getMonth() ?? new Date().getMonth();
+    const aInsurance =await insurance.findOne({
+        employee: employ.idEmployee,
+        year: year,
+        month: month
+    })
+    if(!aInsurance && (aInsurance.status !== "Đã kiểm tra") || aInsurance.status !== "Đã đóng"){
+        await aInsurance.deleteOne();
+        const newInsurance =new insurance({
+            employee : employ.idEmployee,
+            isuranceCode: employ.insuranceCode,
+            salaryInsurance: employ.salary,
+            companyPay: companyPay,
+            employeePay: employeePay,
+            year: year,
+            month: month,
+            status: "Chưa xác nhận"
+        });                
+        await newInsurance.save();
+    }
+}
 async function calEmployPaySlip(employ, time) {
     const year = time?.getFullYear() ?? new Date().getFullYear();
     const month = time?.getMonth() ?? new Date().getMonth();

@@ -22,25 +22,25 @@ const userController = {
             }
             
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     //GET ALL USER
     getAllUser: async (req,res) => {
         try {
             const allUser = await user.find();
-            res.status(200).json(allUser);
+            return res.status(200).json(allUser);
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
      //GET A USER
-     getAUser: async (req, res)=>{
+    getAUser: async (req, res)=>{
         try {
             const aUser =await user.findOne(req.params.id);
-            res.status(200).json(aUser);
+            return res.status(200).json(aUser);
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
 
@@ -49,18 +49,24 @@ const userController = {
         try {
             const User =await user.findOne(req.params.id);
             await User.updateOne({$set: req.body});
-            res.status(200).json("Update successfully!");
+            return res.status(200).json("Update successfully!");
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
     changePassword: async (req, res)=>{
         try {
             const User =await user.findOne(req.params.id);
-            await User.updateOne({password: req.body.password});
-            res.status(200).json("Update successfully!");
+            if(req.user == aLeaveRq.employee || req.user =="admin"){
+                await User.updateOne({password: req.body.password});
+                return res.status(200).json("Update successfully!");
+            }else {
+                return res.status(403).json("You do not have permission");
+            }
+            
+            
         } catch (error) {
-            res.status(500).json(error);
+            return res.status(500).json(error);
         }
     },
 
