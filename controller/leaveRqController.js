@@ -4,7 +4,7 @@ const leaveRqController = {
     //ADD leaveRq
     addLeaveRq: async (req, res) => {
         try {
-            if (req.user === "admin" || req.user === req.body.employee) {
+            if (req.role === "admin" || req.user === req.body.employee) {
                 const aLeaveRq = req.body;
                 const timeStart = new Date(aLeaveRq.timeStart); // Đầu vào : " 2024-05-21 "
                 const timeEnd = new Date(aLeaveRq.timeEnd);
@@ -32,7 +32,9 @@ const leaveRqController = {
     getAllLeaveRq: async (req, res) => {
         try {
             const allLeaveRq = await leaveRq.find();
-            return res.status(200).json(allLeaveRq);
+            const employeeIn = await employInRole(req.user);
+            const leaveRqInRole = await filterRole(allLeaveRq, employeeIn);
+            return res.status(200).json(leaveRqInRole);
         } catch (error) {
             return res.status(500).json(error);
         }
@@ -41,7 +43,7 @@ const leaveRqController = {
     getALeaveRq: async (req, res) => {
         try {
             const aLeaveRq = await leaveRq.findById(req.params.id)
-            if(req.user == aLeaveRq.employee || req.user =="admin"){
+            if(req.user == aLeaveRq.employee || req.role =="admin"){
                 return res.status(200).json(aLeaveRq);
             }else {
                 return res.status(403).json("You do not have permission");
@@ -55,7 +57,9 @@ const leaveRqController = {
     updateLeaveRq: async (req, res) => {
         try {
             const aLeaveRq = await leaveRq.findById(req.params.id)
-            if(req.user == aLeaveRq.employee || req.user =="admin"){
+            delete req.body.status;
+            delete req.body.employee;
+            if(req.user == aLeaveRq.employee || req.role =="admin"){
                 await aLeaveRq.updateOne({ $set: req.body });
                 return res.status(200).json("Update successfully!");
             }else {
@@ -65,9 +69,29 @@ const leaveRqController = {
             return res.status(500).json(error);
         }
     },
+
+    approvalLeaveRq: async (req, res) => {
+        try {
+            const employeeIn = await employInRole(req.user);
+            const aleaveRq = await leaveRq.findById(req.params.id);
+            const exists = employeeIn.some(employee => employee.idEmployee === aleaveRq.employee);
+            if(exists){
+                await aleaveRq.updateOne({
+                    status: req.body.status,
+                    approvedUser: req.user
+                });
+                return res.status(200).json("Update successfully!");
+            }else{
+                return res.status(403).json("You do not have permission");
+            }
+            
+        } catch (error) {
+            return res.status(500).json(error);
+        }
+    },
     employHasLeaveRq: async (req, res) => {
         try {
-            if(req.user == req.params.id || req.user =="admin"){
+            if(req.user == req.params.id || req.role =="admin"){
                 const aLeaveRq = await leaveRq.find({ employee: req.params.id })
                 return res.status(200).json(aLeaveRq);
             }else {
@@ -80,3 +104,28 @@ const leaveRqController = {
 };
 
 module.exports = leaveRqController;
+
+async function employInRole(user) {
+    if( user == "admin"){
+        const employALL = await employee.find()
+        return employALL;
+    }
+    const aBranch = await branch.findOne({ idBranch: user});
+    if (!aBranch) {
+        return "not found";
+    }
+    var elpoyeeIn =[];
+    for (let i = 0; i < aBranch.departments.length; i++){
+        employs = await employee.find({department : aBranch.departments[i]});
+        elpoyeeIn = elpoyeeIn.concat(employs);
+    }
+    return elpoyeeIn;
+}
+
+async function filterRole(all, employeeIn) {
+    const IDemployeeIn = employeeIn.map(employee => employee.idEmployee);
+    const afilterRole = all.filter(object=>
+        IDemployeeIn.includes(object.employee)
+    );
+    return afilterRole;
+}

@@ -16,6 +16,9 @@ const paySlipController = {
     //ADD USER
     calculationPaySlip: async (req, res) => {
         try {
+            if(req.user !== req.params.id){
+                return res.status(403).json("You do not have permission");
+            }
             const aBranch = await branch.findOne({ idBranch: req.params.id });
             if (!aBranch) {
                 return res.status(404).json({ message: "Branch not found" });
@@ -38,12 +41,6 @@ const paySlipController = {
                     await existingPaySlip.deleteOne();
                 }
                 const newPaySlip = await calEmployPaySlip(item, time);
-                // if (existingPaySlip) {
-                //     await existingPaySlip.deleteOne();
-                //     await newPaySlip.save();
-                // } else {
-                //     await newPaySlip.save();
-                // }
                 await newPaySlip.save();
             });
 
@@ -461,9 +458,9 @@ async function calEmployPaySlip(employ, time) {
     let overTimeMoney = (((employ?.salary ?? 0) / dayofwork) / 8 * overTime * 2).toFixed(0);
     overTimeMoney = Math.round(overTimeMoney / 1000) * 1000;
 
-    const aContract = await contract.findOne({
-        idContract: employ?.contract
-    }) || {};
+    // const aContract = await contract.findOne({
+    //     idContract: employ?.contract
+    // }) || {};
 
     const aPosition = await position.findOne({
         title: employ?.position
@@ -493,7 +490,7 @@ async function calEmployPaySlip(employ, time) {
     let totalAdvance = advanceRqs.reduce((sum, item) => sum + (item?.money ?? 0), 0);
 
     const totalSalary = (parseFloat(workSalary) || 0) + (parseFloat(overTimeMoney) || 0) + 
-        (aContract?.eatingAllowance ?? 0) + (aContract?.travelAllowance ?? 0) + 
+        (employ?.eatingAllowance ?? 0) + (employ?.travelAllowance ?? 0) + 
         (aPosition?.allowance ?? 0) + totalDecision - 
         (aInsurance?.employeePay ?? 0) + totalAdvance;
 
@@ -509,8 +506,8 @@ async function calEmployPaySlip(employ, time) {
         overTimeMoney: overTimeMoney,
         decisionMoney: totalDecision,
         positionAllowance: aPosition?.allowance ?? 0,
-        eatingAllowance: aContract?.eatingAllowance ?? 0,
-        travelAllowance: aContract?.travelAllowance ?? 0,
+        eatingAllowance:  employ?.eatingAllowance ?? 0,
+        travelAllowance: employ?.travelAllowance ?? 0,
         workDay: dayWork,
         workSalary: workSalary,
         paiLeave: paiLeave,
@@ -522,110 +519,27 @@ async function calEmployPaySlip(employ, time) {
     return newPaySlip;
 }
 
+async function employInRole(user) {
+    if( user == "admin"){
+        const employALL = await employee.find()
+        return employALL;
+    }
+    const aBranch = await branch.findOne({ idBranch: user});
+    if (!aBranch) {
+        return "not found";
+    }
+    var elpoyeeIn =[];
+    for (let i = 0; i < aBranch.departments.length; i++){
+        employs = await employee.find({department : aBranch.departments[i]});
+        elpoyeeIn = elpoyeeIn.concat(employs);
+    }
+    return elpoyeeIn;
+}
 
-
-// let workbook = new excelJs.Workbook();
-//             // const year = req.body.year;
-//             // const month = req.body.month;
-//             const sheet = workbook.addWorksheet("Bảng lương");
-            
-//             sheet.columns = [
-//                 { header: "STT", key: "stt", width: 4 },
-//                 { header: "Mã nhân viên", key: "employee", width: 13 },
-//                 { header: "Lương cơ bản", key: "salary", width: 13 },
-//                 { header: "Số ngày công", key: "workDay", width: 13 },
-//                 { header: "Nghỉ phép", key: "paiLeave", width: 10 },
-//                 { header: "Lương thực tế", key: "workSalary", width: 13 },
-//                 { header: "Tăng ca(H)", key: "overTime", width: 10 },
-//                 { header: "Tăng ca(Vnđ)", key: "overTimeMoney", width: 12 },
-//                 { header: "Chức vụ", key: "positionAllowance", width: 8 },
-//                 { header: "Đi lại", key: "travelAllowance", width: 8 },
-//                 { header: "Ăn uống", key: "eatingAllowance", width: 8 },
-//                 { header: "Thưởng/phạt", key: "decisionMoney", width: 13 },
-//                 { header: "Tiền đã ứng", key: "advanceMoney", width: 12 },
-//                 { header: "BHXH", key: "insurance", width: 9 },
-//                 { header: "Tổng tiền", key: "totalSalary", width: 11 },
-//                 { header: "Trạng thái", key: "status", width: 14 }
-//             ]
-//             sheet.insertRow(1, ["Công ty Cổ phần Vùng trời thông tin"]);
-//             sheet.mergeCells('A1:P1');
-//             sheet.getRow(1).eachCell((cell, colNumber) => {
-//                 cell.font = {
-//                     bold: true,
-//                     size: 20, // cỡ chữ
-//                     color: { argb: 'FFFFA500' } // màu chữ (đen)
-//                 };
-//                 cell.alignment = { vertical: 'middle', horizontal: 'center' }; // căn giữa dọc và ngang
-//             });
-//             sheet.insertRow(2, ["Bảng lương tháng 4 năm 2024"]);
-//             sheet.mergeCells('A2:P2');
-//             sheet.getRow(2).eachCell((cell, colNumber) => {
-//                 cell.font = {
-//                     bold: true,
-//                     size: 16, // cỡ chữ
-//                     color: { argb: 'FFFFA500' } // màu chữ (đen)
-//                 };
-//             });
-            
-
-            
-//             let rowCount = 0;
-//             const allpaySlip = await paySlip.find();
-//             allpaySlip.map((val, idx) => {
-//                 rowCount++;
-//                 sheet.addRow({
-//                     stt: rowCount,
-//                     employee: val.employee,
-//                     salary: val.salary,
-//                     insurance: val.insurance,
-//                     overTime: val.overTime,
-//                     overTimeMoney: val.overTimeMoney,
-//                     decisionMoney: val.decisionMoney,
-//                     positionAllowance: val.positionAllowance,
-//                     travelAllowance: val.travelAllowance,
-//                     eatingAllowance: val.eatingAllowance,
-//                     workDay: val.workDay,
-//                     workSalary: val.workSalary,
-//                     paiLeave: val.paiLeave,
-//                     advanceMoney: val.advanceMoney,
-//                     totalSalary: val.totalSalary,
-//                     status: val.status
-//                 });
-//             });
-
-//             sheet.getRow(4).eachCell((cell, colNumber) => {
-//                 cell.fill = {
-//                     type: 'pattern',
-//                     pattern: 'solid',
-//                     fgColor: { argb: 'FFFF00' } // Màu nền vàng, bạn có thể thay đổi mã màu tùy thích
-//                 };
-//                 cell.font = { bold: true }; // Thêm in đậm
-//             });
-//             sheet.eachRow({ includeEmpty: false }, function (row, rowNumber) {
-//                 if (rowNumber >= 3) { // Bắt đầu từ dòng thứ 3
-//                     row.eachCell({ includeEmpty: false }, function (cell, colNumber) {
-//                         cell.border = {
-//                             top: { style: 'thin' },
-//                             left: { style: 'thin' },
-//                             bottom: { style: 'thin' },
-//                             right: { style: 'thin' }
-//                         };
-//                     });
-//                 }
-//             });
-            
-
-//             // Ghi vào phản hồi
-//             return res.writeHead(200, {
-//                 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-//                 'Content-Disposition': 'attachment; filename="BangLuong.xlsx"' // Cú pháp tên tệp đã được sửa
-//             });
-
-//             // Ghi workbook vào phản hồi
-//             workbook.xlsx.write(res)
-//                 .then(() => {
-//                     return res.end();
-//                 })
-//                 .catch(err => {
-//                     console.log(err);
-//                 });
+async function filterRole(all, employeeIn) {
+    const IDemployeeIn = employeeIn.map(employee => employee.idEmployee);
+    const afilterRole = all.filter(object=>
+        IDemployeeIn.includes(object.employee)
+    );
+    return afilterRole;
+}

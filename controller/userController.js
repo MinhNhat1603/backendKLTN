@@ -57,7 +57,7 @@ const userController = {
     changePassword: async (req, res)=>{
         try {
             const User =await user.findOne(req.params.id);
-            if(req.user == aLeaveRq.employee || req.user =="admin"){
+            if(req.user == aLeaveRq.employee || req.role =="admin"){
                 await User.updateOne({password: req.body.password});
                 return res.status(200).json("Update successfully!");
             }else {

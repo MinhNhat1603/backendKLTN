@@ -1,8 +1,6 @@
-const fs = require('fs');
-const path = require('path');
-
 const employee = require("../models/employeesModel");
-const ExcelJS = require('exceljs');
+const branch = require("../models/branchesModel");
+
 const employController = {
     //ADD  employ
     addEmploy: async (req, res) => {
@@ -31,9 +29,10 @@ const employController = {
     },
     //GET ALL employ
     getAllEmploy: async (req, res) => {
-        try {
-            const employALL = await employee.find();
-            return res.status(200).json(employALL);
+        try {  
+            const employeeIn = await employInRole(req.user);
+            return res.status(200).json(employeeIn);
+            
         } catch (error) {
             return res.status(500).json(error);
         }
@@ -157,4 +156,21 @@ module.exports = employController;
 
 async function removeVietnameseDiacritics(str) {
     return await str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+}
+
+async function employInRole(user) {
+    if( user == "admin"){
+        const employALL = await employee.find()
+        return employALL;
+    }
+    const aBranch = await branch.findOne({ idBranch: user});
+    if (!aBranch) {
+        return "not found";
+    }
+    var elpoyeeIn =[];
+    for (let i = 0; i < aBranch.departments.length; i++){
+        employs = await employee.find({department : aBranch.departments[i]});
+        elpoyeeIn = elpoyeeIn.concat(employs);
+    }
+    return elpoyeeIn;
 }

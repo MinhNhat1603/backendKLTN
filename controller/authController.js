@@ -16,7 +16,8 @@ const authController = {
                 return res.status(404).json("Wrong username or password");
             }else{ 
                 const accessToken = jwt.sign({
-                    userName: auser.userName
+                    userName: auser.userName, 
+                    role: auser.role
                 },
                 key, 
                 {expiresIn:"8h"}
@@ -78,11 +79,7 @@ const authController = {
                     res.status(403).json("Token is not valid")
                 }
                 req.user = user.userName;
-                // if (req.user === "admin" || req.user === req.body.employee || req.user === req.params.id){
-                //     return next();
-                // } else {
-                //     return res.status(403).json("You do not have permission");
-                // }
+                req.role = user.role;
                 return next();
                 
             });
@@ -99,8 +96,9 @@ const authController = {
                 if(error){
                     res.status(403).json("Token is not valid")
                 }
-                if( user.userName == "admin"){
+                if( user.role == "admin"){
                     req.user = user.userName;
+                    req.role = user.role;
                     next();
                 }else{
                     res.status(401).json("you are not authenticated")

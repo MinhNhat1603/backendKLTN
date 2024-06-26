@@ -11,10 +11,7 @@ const timeSheetController = {
             const month = acurrentDate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cộng thêm 1
             const day = acurrentDate.getDate();
             const currentDate = new Date(year, month - 1, day, 7, 30, 0);
-            //const currentDate = new Date();
-            // const year = currentDate.getFullYear();
-            // const month = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0, nên cộng thêm 1
-            // const day = currentDate.getDate();
+            
             const limit = new Date(year, month - 1, day, 14, 0, 0);
 
             var aTimesheet = await timeSheet.findOne({
