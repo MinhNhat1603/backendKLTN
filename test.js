@@ -3,7 +3,7 @@ function removeVietnameseDiacritics(str) {
   }
   
   // Ví dụ sử dụng
-  const inputString = "HĐCK";
+  const inputString = "HÔCK";
   const outputString = removeVietnameseDiacritics(inputString);
   
   console.log(outputString);

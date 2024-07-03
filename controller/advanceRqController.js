@@ -18,7 +18,7 @@ const advanceRqController = {
     getAllAdvanceRq: async (req, res) => {
         try {
             const allAdvanceRq = await advanceRq.find();
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             const AdvanceRqInRole = await filterRole(allAdvanceRq, employeeIn);
 
             return res.status(200).json(AdvanceRqInRole);
@@ -59,7 +59,7 @@ const advanceRqController = {
 
     approvalAdvanceRq: async (req, res) => {
         try {
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             const AdvanceRq = await advanceRq.findById(req.params.id);
             const exists = employeeIn.some(employee => employee.idEmployee === AdvanceRq.employee);
             if(exists){
@@ -94,7 +94,7 @@ const advanceRqController = {
 
 module.exports = advanceRqController;
 
-async function employInRole(user) {
+async function employInRoleAdmin(user) {
     if( user == "admin"){
         const employALL = await employee.find()
         return employALL;
@@ -103,12 +103,12 @@ async function employInRole(user) {
     if (!aBranch) {
         return "not found";
     }
-    var elpoyeeIn =[];
+    var employIn =[];
     for (let i = 0; i < aBranch.departments.length; i++){
         employs = await employee.find({department : aBranch.departments[i]});
-        elpoyeeIn = elpoyeeIn.concat(employs);
+        employIn = employIn.concat(employs);
     }
-    return elpoyeeIn;
+    return employIn;
 }
 
 async function filterRole(all, employeeIn) {

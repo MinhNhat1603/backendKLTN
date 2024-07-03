@@ -7,7 +7,7 @@ const decisionController = {
     addDecision: async (req,res) => {
         try {
             const newDecision =new decision(req.body);
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             const exists = employeeIn.some(employee => employee.idEmployee === newDecision.employee);
             if(exists){
                 const saveDecision = await newDecision.save();
@@ -23,7 +23,7 @@ const decisionController = {
     getAllDecision: async (req,res) => {
         try {
             const allDecision = await decision.find();
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             const decisionInRole = await filterRole(allDecision, employeeIn);
             return res.status(200).json(decisionInRole);
         } catch (error) {
@@ -72,7 +72,7 @@ const decisionController = {
 
 module.exports = decisionController;
 
-async function employInRole(user) {
+async function employInRoleAdmin(user) {
     if( user == "admin"){
         const employALL = await employee.find()
         return employALL;
@@ -81,12 +81,12 @@ async function employInRole(user) {
     if (!aBranch) {
         return "not found";
     }
-    var elpoyeeIn =[];
+    var employIn =[];
     for (let i = 0; i < aBranch.departments.length; i++){
         employs = await employee.find({department : aBranch.departments[i]});
-        elpoyeeIn = elpoyeeIn.concat(employs);
+        employIn = employIn.concat(employs);
     }
-    return elpoyeeIn;
+    return employIn;
 }
 
 async function filterRole(all, employeeIn) {

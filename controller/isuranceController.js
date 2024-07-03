@@ -6,7 +6,7 @@ const insuranceController = {
     addInsurance: async (req,res) => {
         try {
             const employ = await employee.findOne({idEmployee: req.params.id})
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             const exists = employeeIn.some(employee => employee.idEmployee === employ.employee);
             if(exists){
                 const companyPay = employ.salary / 100 * 21.5;
@@ -40,7 +40,7 @@ const insuranceController = {
     getAllInsurance: async (req,res) => {
         try {
             const allInsurance = await insurance.find();
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             const InRole = await filterRole(allInsurance, employeeIn);
             return res.status(200).json(InRole);
         } catch (error) {
@@ -101,7 +101,7 @@ const insuranceController = {
 
 module.exports = insuranceController;
 
-async function employInRole(user) {
+async function employInRoleAdmin(user) {
     if( user == "admin"){
         const employALL = await employee.find()
         return employALL;
@@ -110,12 +110,12 @@ async function employInRole(user) {
     if (!aBranch) {
         return "not found";
     }
-    var elpoyeeIn =[];
+    var employIn =[];
     for (let i = 0; i < aBranch.departments.length; i++){
         employs = await employee.find({department : aBranch.departments[i]});
-        elpoyeeIn = elpoyeeIn.concat(employs);
+        employIn = employIn.concat(employs);
     }
-    return elpoyeeIn;
+    return employIn;
 }
 
 async function filterRole(all, employeeIn) {

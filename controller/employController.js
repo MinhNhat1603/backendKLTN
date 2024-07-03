@@ -1,5 +1,6 @@
 const employee = require("../models/employeesModel");
 const branch = require("../models/branchesModel");
+const department = require("../models/departmentsModel");
 
 const employController = {
     //ADD  employ
@@ -30,7 +31,7 @@ const employController = {
     //GET ALL employ
     getAllEmploy: async (req, res) => {
         try {  
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             return res.status(200).json(employeeIn);
             
         } catch (error) {
@@ -158,7 +159,7 @@ async function removeVietnameseDiacritics(str) {
     return await str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
 }
 
-async function employInRole(user) {
+async function employInRoleAdmin(user) {
     if( user == "admin"){
         const employALL = await employee.find()
         return employALL;
@@ -167,10 +168,25 @@ async function employInRole(user) {
     if (!aBranch) {
         return "not found";
     }
-    var elpoyeeIn =[];
+    var employIn =[];
     for (let i = 0; i < aBranch.departments.length; i++){
         employs = await employee.find({department : aBranch.departments[i]});
-        elpoyeeIn = elpoyeeIn.concat(employs);
+        employIn = employIn.concat(employs);
     }
-    return elpoyeeIn;
+    return employIn;
+}
+
+async function employInRoleUser(user, position) {
+    var employIn = [];
+    if(position == "Director"){
+        const isHas = await branch.findOne({representative: position})
+        for (let i = 0; i < aBranch.departments.length; i++){
+            employs = await employee.find({department : aBranch.departments[i]});
+            employIn = employIn.concat(employs);
+        }
+    }else if(position == "Manager"){
+        const isHas = await department.findOne({manager: position})
+        employIn =await employee.find({department : isHas.idDepartment});
+    }
+    return employIn;
 }

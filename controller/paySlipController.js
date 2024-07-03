@@ -519,7 +519,7 @@ async function calEmployPaySlip(employ, time) {
     return newPaySlip;
 }
 
-async function employInRole(user) {
+async function employInRoleAdmin(user) {
     if( user == "admin"){
         const employALL = await employee.find()
         return employALL;
@@ -528,12 +528,12 @@ async function employInRole(user) {
     if (!aBranch) {
         return "not found";
     }
-    var elpoyeeIn =[];
+    var employIn =[];
     for (let i = 0; i < aBranch.departments.length; i++){
         employs = await employee.find({department : aBranch.departments[i]});
-        elpoyeeIn = elpoyeeIn.concat(employs);
+        employIn = employIn.concat(employs);
     }
-    return elpoyeeIn;
+    return employIn;
 }
 
 async function filterRole(all, employeeIn) {

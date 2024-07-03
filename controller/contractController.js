@@ -7,7 +7,7 @@ const contractController = {
     addContract: async (req,res) => {
         try {
             const newContract =new contract(req.body);
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             const exists = employeeIn.some(employee => employee.idEmployee === newContract.employee);
 
             if(exists){
@@ -39,7 +39,7 @@ const contractController = {
     getAllContract: async (req,res) => {
         try {
             const allContract = await contract.find();
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             const contractInRole = await filterRole(allContract, employeeIn);
             return res.status(200).json(contractInRole);
         } catch (error) {
@@ -87,7 +87,7 @@ const contractController = {
 
 module.exports = contractController;
 
-async function employInRole(user) {
+async function employInRoleAdmin(user) {
     if( user == "admin"){
         const employALL = await employee.find()
         return employALL;
@@ -96,12 +96,12 @@ async function employInRole(user) {
     if (!aBranch) {
         return "not found";
     }
-    var elpoyeeIn =[];
+    var employIn =[];
     for (let i = 0; i < aBranch.departments.length; i++){
         employs = await employee.find({department : aBranch.departments[i]});
-        elpoyeeIn = elpoyeeIn.concat(employs);
+        employIn = employIn.concat(employs);
     }
-    return elpoyeeIn;
+    return employIn;
 }
 
 async function filterRole(all, employeeIn) {

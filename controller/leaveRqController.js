@@ -32,7 +32,7 @@ const leaveRqController = {
     getAllLeaveRq: async (req, res) => {
         try {
             const allLeaveRq = await leaveRq.find();
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             const leaveRqInRole = await filterRole(allLeaveRq, employeeIn);
             return res.status(200).json(leaveRqInRole);
         } catch (error) {
@@ -72,7 +72,7 @@ const leaveRqController = {
 
     approvalLeaveRq: async (req, res) => {
         try {
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             const aleaveRq = await leaveRq.findById(req.params.id);
             const exists = employeeIn.some(employee => employee.idEmployee === aleaveRq.employee);
             if(exists){
@@ -105,7 +105,7 @@ const leaveRqController = {
 
 module.exports = leaveRqController;
 
-async function employInRole(user) {
+async function employInRoleAdmin(user) {
     if( user == "admin"){
         const employALL = await employee.find()
         return employALL;
@@ -114,12 +114,12 @@ async function employInRole(user) {
     if (!aBranch) {
         return "not found";
     }
-    var elpoyeeIn =[];
+    var employIn =[];
     for (let i = 0; i < aBranch.departments.length; i++){
         employs = await employee.find({department : aBranch.departments[i]});
-        elpoyeeIn = elpoyeeIn.concat(employs);
+        employIn = employIn.concat(employs);
     }
-    return elpoyeeIn;
+    return employIn;
 }
 
 async function filterRole(all, employeeIn) {

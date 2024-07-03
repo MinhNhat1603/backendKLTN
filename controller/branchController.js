@@ -64,12 +64,12 @@ const branchController = {
             if (!aBranch) {
                 return res.status(404).json({ message: "Branch not found" });
             }
-            var elpoyeeIn =[];
+            var employIn =[];
             for (let i = 0; i < aBranch.departments.length; i++){
                 employs = await employee.find({department : aBranch.departments[i]});
-                elpoyeeIn = elpoyeeIn.concat(employs);
+                employIn = employIn.concat(employs);
             }
-            res.status(200).json(elpoyeeIn);
+            res.status(200).json(employIn);
         } catch (error) {
             res.status(500).json(error);
         }

@@ -10,7 +10,7 @@ const salaryDecController = {
     addSalaryDec: async (req,res) => {
         try {
             const newSalaryDec =new salaryDec(req.body);
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             const exists = employeeIn.some(employee => employee.idEmployee === newSalaryDec.employee);
             if(exists){
                 newSalaryDec.status = "Chưa đánh giá";          
@@ -28,7 +28,7 @@ const salaryDecController = {
     getAllSalaryDec: async (req,res) => {
         try {
             const allSalaryDec = await salaryDec.find();
-            const employeeIn = await employInRole(req.user);
+            const employeeIn = await employInRoleAdmin(req.user);
             const salaryDecInRole = await filterRole(allSalaryDec, employeeIn);
             res.status(200).json(salaryDecInRole);
         } catch (error) {
@@ -127,7 +127,7 @@ const salaryDecController = {
 
 module.exports = salaryDecController;
 
-async function employInRole(user) {
+async function employInRoleAdmin(user) {
     if( user == "admin"){
         const employALL = await employee.find()
         return employALL;
@@ -136,12 +136,12 @@ async function employInRole(user) {
     if (!aBranch) {
         return "not found";
     }
-    var elpoyeeIn =[];
+    var employIn =[];
     for (let i = 0; i < aBranch.departments.length; i++){
         employs = await employee.find({department : aBranch.departments[i]});
-        elpoyeeIn = elpoyeeIn.concat(employs);
+        employIn = employIn.concat(employs);
     }
-    return elpoyeeIn;
+    return employIn;
 }
 
 async function filterRole(all, employeeIn) {
